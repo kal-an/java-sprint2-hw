@@ -1,5 +1,7 @@
 package ru.yandex.practicum.tracker;
 
+import ru.yandex.practicum.tracker.tasks.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

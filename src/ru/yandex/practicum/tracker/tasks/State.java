@@ -1,4 +1,4 @@
-package ru.yandex.practicum.tracker;
+package ru.yandex.practicum.tracker.tasks;
 
 //типы состояний задач
 public enum State {
