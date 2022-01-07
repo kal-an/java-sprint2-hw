@@ -8,11 +8,14 @@ import ru.yandex.practicum.tracker.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InMemoryTasksManager implements TaskManager {
-    private HashMap<Long, Task> tasks; //таблица всех задач
+public class InMemoryTasksManager implements TaskManager<Task> {
+    private final HashMap<Long, Task> tasks; //таблица всех задач
+    private static final int MAX_QUEUE_CAPACITY = 10; //макс. количесто недавних задач
+    private final ArrayList<Task> recentlyTasks;
 
     public InMemoryTasksManager() {
         tasks = new HashMap<>();
+        recentlyTasks = new ArrayList<>();
     }
 
     //Получение списка всех задач.
@@ -42,12 +45,13 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     //Получение списка всех подзадач определённого эпика.
+    //TODO: подумать какой тип указать для списка (до этого был SubTask)
     @Override
-    public ArrayList<SubTask> getSubTasks(long epicId) {
-        ArrayList<SubTask> subTasks = new ArrayList<>();
+    public ArrayList<Task> getSubTasks(long epicId) {
+        ArrayList<Task> subTasks = new ArrayList<>();
         Epic epic = (Epic) tasks.get(epicId);
         for (Long taskId : epic.getSubTasks()) {
-            subTasks.add((SubTask) tasks.get(taskId));
+            subTasks.add(tasks.get(taskId));
         }
         return subTasks;
     }
@@ -62,7 +66,9 @@ public class InMemoryTasksManager implements TaskManager {
     //Получение задачи любого типа по идентификатору.
     @Override
     public Task getTask(long taskId) {
-        return tasks.get(taskId);
+        Task task = tasks.get(taskId);
+        updateHistory(task);
+        return task;
     }
 
     //Добавление новой задачи, эпика и подзадачи.
@@ -104,8 +110,9 @@ public class InMemoryTasksManager implements TaskManager {
 
     //проверить готовность подзадач эпика
     private boolean isAllSubTaskInEpicDone(Epic epicId) {
-        ArrayList<SubTask> subTasks = getSubTasks(epicId.getTaskId());
-        for (SubTask subTask : subTasks) {
+        //TODO: подумать какой тип указать для списка (до этого был SubTask)
+        ArrayList<Task> subTasks = getSubTasks(epicId.getTaskId());
+        for (Task subTask : subTasks) {
             //если нет выполненных подзадач то вернуть false
             if (!subTask.getTaskStatus().equals(State.DONE)) {
                 return false;
@@ -127,8 +134,9 @@ public class InMemoryTasksManager implements TaskManager {
     public void removeTask(long newTaskId) {
         //удаление подзадач если переданный ID является эпиком
         if (tasks.get(newTaskId) instanceof Epic) {
-            ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
-            for (SubTask subTask : subTasks) {
+            //TODO: подумать какой тип указать для списка (до этого был SubTask)
+            ArrayList<Task> subTasks = getSubTasks(newTaskId); //список подзадач эпика
+            for (Task subTask : subTasks) {
                 tasks.remove(subTask.getTaskId()); //удалить задачу
             }
         }
@@ -138,5 +146,23 @@ public class InMemoryTasksManager implements TaskManager {
     //проверить есть ли задачи в таблице
     private boolean isAnyTasks() {
         return !tasks.isEmpty();
+    }
+
+    //Просмотр истории задач.
+    @Override
+    public ArrayList<Task> getHistory() {
+        return recentlyTasks;
+    }
+
+    //Обновление истории задач.
+    @Override
+    public void updateHistory(Task viewedTask) {
+        int currentCapacity = recentlyTasks.size();
+        if (currentCapacity < MAX_QUEUE_CAPACITY) { //если есть место в списке
+            recentlyTasks.add(viewedTask);
+        } else {
+            recentlyTasks.remove(0); //удалить первую задачу
+            recentlyTasks.add(viewedTask); //добавить новую просмотренную задачу
+        }
     }
 }

@@ -1,34 +1,39 @@
 package ru.yandex.practicum.tracker;
 
-import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 
 import java.util.ArrayList;
 
 //интерфейс менеджера задач
-public interface TaskManager {
+public interface TaskManager<T extends Task> {
 
     //Получение списка всех задач.
-    public ArrayList<Task> getAllTasks();
+    ArrayList<T> getAllTasks();
 
     //Получение списка всех эпиков.
-    public ArrayList<Task> getEpics();
+    ArrayList<T> getEpics();
 
     //Получение списка всех подзадач определённого эпика.
-    public ArrayList<SubTask> getSubTasks(long epicId);
+    ArrayList<T> getSubTasks(long epicId);
 
     //Получение задачи любого типа по идентификатору.
-    public Task getTask(long taskId);
+    T getTask(long taskId);
 
     //Добавление новой задачи, эпика и подзадачи.
-    public void addTask(Task newTask);
+    void addTask(T newTask);
 
     //Обновление задачи любого типа по идентификатору.
-    public void updateTask(Task newTask);
+    void updateTask(T newTask);
 
     //Удаление ранее всех добавленных задач.
-    public void removeTask();
+    void removeTask();
 
     //Удаление задачи по идентификатору.
-    public void removeTask(long newTaskId);
+    void removeTask(long newTaskId);
+
+    //Получение списка просмотренных задач.
+    ArrayList<T> getHistory();
+
+    //Обновление истории задач.
+    void updateHistory(T viewedTask);
 }
