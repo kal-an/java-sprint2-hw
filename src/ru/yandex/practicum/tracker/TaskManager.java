@@ -4,11 +4,9 @@ import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-//класс менеджера задач
+//интерфейс менеджера задач
 public interface TaskManager {
-    HashMap<Long, Task> tasks = null; //таблица всех задач
 
     //Получение списка всех задач.
     public ArrayList<Task> getAllTasks();
