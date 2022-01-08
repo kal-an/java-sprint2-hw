@@ -1,4 +1,4 @@
-package ru.yandex.practicum.tracker;
+package ru.yandex.practicum.tracker.manager;
 
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class InMemoryTasksManager implements TaskManager<Task> {
     private final HashMap<Long, Task> tasks; //таблица всех задач
     private static final int MAX_QUEUE_CAPACITY = 10; //макс. количесто недавних задач
-    private final ArrayList<Task> recentlyTasks;
+    private final ArrayList<Task> recentlyTasks; //список недавних задач
 
     public InMemoryTasksManager() {
         tasks = new HashMap<>();
@@ -47,11 +47,11 @@ public class InMemoryTasksManager implements TaskManager<Task> {
     //Получение списка всех подзадач определённого эпика.
     //TODO: подумать какой тип указать для списка (до этого был SubTask)
     @Override
-    public ArrayList<Task> getSubTasks(long epicId) {
-        ArrayList<Task> subTasks = new ArrayList<>();
+    public ArrayList<SubTask> getSubTasks(long epicId) {
+        ArrayList<SubTask> subTasks = new ArrayList<>();
         Epic epic = (Epic) tasks.get(epicId);
         for (Long taskId : epic.getSubTasks()) {
-            subTasks.add(tasks.get(taskId));
+            subTasks.add((SubTask) tasks.get(taskId));
         }
         return subTasks;
     }
@@ -111,7 +111,7 @@ public class InMemoryTasksManager implements TaskManager<Task> {
     //проверить готовность подзадач эпика
     private boolean isAllSubTaskInEpicDone(Epic epicId) {
         //TODO: подумать какой тип указать для списка (до этого был SubTask)
-        ArrayList<Task> subTasks = getSubTasks(epicId.getTaskId());
+        ArrayList<SubTask> subTasks = getSubTasks(epicId.getTaskId());
         for (Task subTask : subTasks) {
             //если нет выполненных подзадач то вернуть false
             if (!subTask.getTaskStatus().equals(State.DONE)) {
@@ -135,7 +135,7 @@ public class InMemoryTasksManager implements TaskManager<Task> {
         //удаление подзадач если переданный ID является эпиком
         if (tasks.get(newTaskId) instanceof Epic) {
             //TODO: подумать какой тип указать для списка (до этого был SubTask)
-            ArrayList<Task> subTasks = getSubTasks(newTaskId); //список подзадач эпика
+            ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
             for (Task subTask : subTasks) {
                 tasks.remove(subTask.getTaskId()); //удалить задачу
             }
