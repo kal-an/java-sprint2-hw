@@ -1,4 +1,4 @@
-package ru.yandex.practicum.tracker;
+package ru.yandex.practicum.tracker.manager;
 
 import ru.yandex.practicum.tracker.tasks.Task;
 
