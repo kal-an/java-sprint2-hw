@@ -1,5 +1,6 @@
 package ru.yandex.practicum.tracker.manager;
 
+import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public interface TaskManager<T extends Task> {
     ArrayList<T> getEpics();
 
     //Получение списка всех подзадач определённого эпика.
-    ArrayList<T> getSubTasks(long epicId);
+    ArrayList<SubTask> getSubTasks(long epicId);
 
     //Получение задачи любого типа по идентификатору.
     T getTask(long taskId);
