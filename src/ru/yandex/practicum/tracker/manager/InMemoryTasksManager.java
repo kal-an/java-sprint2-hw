@@ -45,7 +45,6 @@ public class InMemoryTasksManager implements TaskManager<Task> {
     }
 
     //Получение списка всех подзадач определённого эпика.
-    //TODO: подумать какой тип указать для списка (до этого был SubTask)
     @Override
     public ArrayList<SubTask> getSubTasks(long epicId) {
         ArrayList<SubTask> subTasks = new ArrayList<>();
@@ -110,7 +109,6 @@ public class InMemoryTasksManager implements TaskManager<Task> {
 
     //проверить готовность подзадач эпика
     private boolean isAllSubTaskInEpicDone(Epic epicId) {
-        //TODO: подумать какой тип указать для списка (до этого был SubTask)
         ArrayList<SubTask> subTasks = getSubTasks(epicId.getTaskId());
         for (Task subTask : subTasks) {
             //если нет выполненных подзадач то вернуть false
@@ -134,7 +132,6 @@ public class InMemoryTasksManager implements TaskManager<Task> {
     public void removeTask(long newTaskId) {
         //удаление подзадач если переданный ID является эпиком
         if (tasks.get(newTaskId) instanceof Epic) {
-            //TODO: подумать какой тип указать для списка (до этого был SubTask)
             ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
             for (Task subTask : subTasks) {
                 tasks.remove(subTask.getTaskId()); //удалить задачу
