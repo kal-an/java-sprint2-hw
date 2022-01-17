@@ -8,7 +8,7 @@ import ru.yandex.practicum.tracker.tasks.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class InMemoryTasksManager implements TaskManager<Task> {
+public class InMemoryTasksManager implements TaskManager {
     private final HashMap<Long, Task> tasks; //таблица всех задач
     private static final int MAX_QUEUE_CAPACITY = 10; //макс. количесто недавних задач
     private final ArrayList<Task> recentlyTasks; //список недавних задач

@@ -1,13 +1,14 @@
 package ru.yandex.practicum.tracker.tests;
 
 import ru.yandex.practicum.tracker.manager.InMemoryTasksManager;
+import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.*;
 
 //класс для тестирования
 public class Generator {
-    InMemoryTasksManager taskManager;
+    TaskManager taskManager;
 
-    public Generator(InMemoryTasksManager taskManager) {
+    public Generator(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
