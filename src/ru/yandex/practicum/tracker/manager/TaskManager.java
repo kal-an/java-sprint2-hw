@@ -32,9 +32,4 @@ public interface TaskManager {
     //Удаление задачи по идентификатору.
     void removeTask(long newTaskId);
 
-    //Получение списка просмотренных задач.
-    ArrayList<Task> getHistory();
-
-    //Обновление истории задач.
-    void updateHistory(Task viewedTask);
 }
