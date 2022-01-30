@@ -112,7 +112,10 @@ public class Generator {
 
     //Распечатать историю недавних задач
     private void printHistory() {
-
+        System.out.println("--- Список недавних задач");
+        for (Task task : taskManager.getHistory()) {
+            System.out.print("  " + task.getTaskId());
+        }
         System.out.println();
     }
 }

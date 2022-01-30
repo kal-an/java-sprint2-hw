@@ -2,14 +2,13 @@ package ru.yandex.practicum.tracker.manager.history;
 
 import ru.yandex.practicum.tracker.tasks.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //менеджер управления историей
 public class InMemoryHistoryManager implements HistoryManager {
 
     //список задач истории просмотра
-    private final HistoryLinkedList<Task> historyTaskList = new HistoryLinkedList<>();
+    HistoryLinkedList<Task> historyTaskList = new HistoryLinkedList<>();
 
     //класс для собственного списка задач истории
     class HistoryLinkedList<T> {
@@ -18,7 +17,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         private int size = 0;
 
         //добавить задачу в историю просмотров
-        private void addLast(T element) {
+        public void addLast(T element) {
             final Node<T> oldTail = tail; //хвост
             final Node<T> newNode = new Node<>(oldTail, element, null); //новый узел
             tail = newNode;
@@ -31,12 +30,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         //получить размер списка
-        private int size() {
+        public int size() {
             return this.size;
-        }
-
-        private ArrayList<Task> getTasks() {
-            return null;
         }
     }
 

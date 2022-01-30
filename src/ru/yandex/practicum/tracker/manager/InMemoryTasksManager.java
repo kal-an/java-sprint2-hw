@@ -66,6 +66,7 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public Task getTask(long taskId) {
         Task task = tasks.get(taskId);
+        updateHistory(task);
         return task;
     }
 
@@ -144,4 +145,21 @@ public class InMemoryTasksManager implements TaskManager {
         return !tasks.isEmpty();
     }
 
+    //Просмотр истории задач.
+    @Override
+    public ArrayList<Task> getHistory() {
+        return recentlyTasks;
+    }
+
+    //Обновление истории задач.
+    @Override
+    public void updateHistory(Task viewedTask) {
+        int currentCapacity = recentlyTasks.size();
+        if (currentCapacity < MAX_QUEUE_CAPACITY) { //если есть место в списке
+            recentlyTasks.add(viewedTask);
+        } else {
+            recentlyTasks.remove(0); //удалить первую задачу
+            recentlyTasks.add(viewedTask); //добавить новую просмотренную задачу
+        }
+    }
 }
