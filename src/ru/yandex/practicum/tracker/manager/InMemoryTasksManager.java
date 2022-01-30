@@ -10,12 +10,9 @@ import java.util.HashMap;
 
 public class InMemoryTasksManager implements TaskManager {
     private final HashMap<Long, Task> tasks; //таблица всех задач
-    private static final int MAX_QUEUE_CAPACITY = 10; //макс. количесто недавних задач
-    private final ArrayList<Task> recentlyTasks; //список недавних задач
 
     public InMemoryTasksManager() {
         tasks = new HashMap<>();
-        recentlyTasks = new ArrayList<>();
     }
 
     //Получение списка всех задач.
@@ -66,7 +63,6 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public Task getTask(long taskId) {
         Task task = tasks.get(taskId);
-        updateHistory(task);
         return task;
     }
 
@@ -143,23 +139,5 @@ public class InMemoryTasksManager implements TaskManager {
     //проверить есть ли задачи в таблице
     private boolean isAnyTasks() {
         return !tasks.isEmpty();
-    }
-
-    //Просмотр истории задач.
-    @Override
-    public ArrayList<Task> getHistory() {
-        return recentlyTasks;
-    }
-
-    //Обновление истории задач.
-    @Override
-    public void updateHistory(Task viewedTask) {
-        int currentCapacity = recentlyTasks.size();
-        if (currentCapacity < MAX_QUEUE_CAPACITY) { //если есть место в списке
-            recentlyTasks.add(viewedTask);
-        } else {
-            recentlyTasks.remove(0); //удалить первую задачу
-            recentlyTasks.add(viewedTask); //добавить новую просмотренную задачу
-        }
     }
 }
