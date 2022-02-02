@@ -4,6 +4,7 @@ import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //интерфейс менеджера задач
 public interface TaskManager {
@@ -31,5 +32,8 @@ public interface TaskManager {
 
     //Удаление задачи по идентификатору.
     void removeTask(long newTaskId);
+
+    //Получение списка просмотренных задач.
+    List<Task> getHistory();
 
 }

@@ -1,5 +1,7 @@
 package ru.yandex.practicum.tracker.manager;
 
+import ru.yandex.practicum.tracker.manager.history.HistoryManager;
+import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
@@ -7,12 +9,15 @@ import ru.yandex.practicum.tracker.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTasksManager implements TaskManager {
     private final HashMap<Long, Task> tasks; //таблица всех задач
+    private final HistoryManager historyManager; //менеджер истории
 
-    public InMemoryTasksManager() {
+    public InMemoryTasksManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
+        this.historyManager = historyManager;
     }
 
     //Получение списка всех задач.
@@ -63,6 +68,7 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public Task getTask(long taskId) {
         Task task = tasks.get(taskId);
+        historyManager.add(task);
         return task;
     }
 
@@ -131,13 +137,32 @@ public class InMemoryTasksManager implements TaskManager {
             ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
             for (Task subTask : subTasks) {
                 tasks.remove(subTask.getTaskId()); //удалить задачу
+                historyManager.remove(subTask.getTaskId()); //удалить задачу из просмотров
             }
         }
-        tasks.remove(newTaskId);
+        //удаление задачи из эпика, если переданный ID является подзадачей
+        if (tasks.get(newTaskId) instanceof SubTask) {
+            removeSubTaskFromEpic(newTaskId);
+        }
+        tasks.remove(newTaskId); //удалить задачу
+        historyManager.remove(newTaskId); //удалить задачу из просмотров
+    }
+
+    //Удаление подзадачи из эпика.
+    private void removeSubTaskFromEpic(long oldSubTaskId) {
+        long epicId = ((SubTask) tasks.get(oldSubTaskId)).getEpicId();
+        ((Epic) tasks.get(epicId)).getSubTasks().remove(oldSubTaskId);
+    }
+
+    //Получение списка просмотренных задач.
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
     //проверить есть ли задачи в таблице
     private boolean isAnyTasks() {
         return !tasks.isEmpty();
     }
+
 }
