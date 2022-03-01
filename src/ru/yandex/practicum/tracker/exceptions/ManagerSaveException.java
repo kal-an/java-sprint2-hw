@@ -1,6 +1,6 @@
 package ru.yandex.practicum.tracker.exceptions;
 
-public class ManagerSaveException extends Exception{
+public class ManagerSaveException extends RuntimeException{
 
     public ManagerSaveException() {
     }

@@ -96,61 +96,38 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     protected void setSubTasks(long epicId, SubTask newSubTask) {
         super.setSubTasks(epicId, newSubTask);
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка сохранения");
-        }
+        save();
     }
 
     @Override
     public Task getTask(long taskId) {
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка сохранения после получения задачи");
-        }
+        save();
         return super.getTask(taskId);
     }
 
     @Override
     public void addTask(Task newTask) {
         super.addTask(newTask);
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка сохранения после добавления задачи");
-        }
+        save();
     }
 
     @Override
     public void updateTask(Task newTask) {
         super.updateTask(newTask);
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка сохранения после обновления задачи");
-        }
+        save();
     }
 
     @Override
     public void removeTask() {
         super.removeTask();
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка сохранения после удаления всех задач");
-        }
+        save();
     }
 
     @Override
     public void removeTask(long newTaskId) {
         super.removeTask(newTaskId);
-        try {
-            save();
-        } catch (ManagerSaveException e) {
-            System.out.println("Ошибка сохранения после удаления задачи по id");
-        }
+        save();
+
     }
 
     @Override
