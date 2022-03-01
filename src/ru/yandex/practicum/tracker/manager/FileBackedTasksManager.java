@@ -94,8 +94,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return super.getSubTasks(epicId);
     }
 
-    protected void setSubTasks(long epicId, SubTask newSubTask) {
-        super.setSubTasks(epicId, newSubTask);
+    protected void setSubTasks(SubTask newSubTask) {
+        super.setSubTasks(newSubTask);
         save();
     }
 
@@ -199,7 +199,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[5]);
             task = new SubTask(name, description, id, status, epicId);
-            setSubTasks(epicId, (SubTask) task);
+            setSubTasks((SubTask) task);
         } else if (type == TaskType.EPIC) {
             task = new Epic(name, description, id, status);
         } else {

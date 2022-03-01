@@ -58,9 +58,9 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     //Добавление подзадачи к эпику.
-    protected void setSubTasks(long epicId, SubTask newSubTask) {
-        Epic epic = (Epic) tasks.get(epicId); //найти нужный эпик
-        ArrayList<Long> subTasks = epic.getSubTasks();
+    protected void setSubTasks(SubTask newSubTask) {
+        long epicId = newSubTask.getEpicId(); //найти нужный эпик
+        ArrayList<Long> subTasks = ((Epic) tasks.get(epicId)).getSubTasks();
         subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
     }
 
@@ -79,7 +79,7 @@ public class InMemoryTasksManager implements TaskManager {
         tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
 
         if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
-            setSubTasks(((SubTask) newTask).getEpicId(), (SubTask) newTask);
+            setSubTasks((SubTask) newTask);
         }
     }
 
