@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTasksManager implements TaskManager {
-    private final HashMap<Long, Task> tasks; //таблица всех задач
-    private final HistoryManager historyManager; //менеджер истории
+    protected static HashMap<Long, Task> tasks = null; //таблица всех задач
+    protected HistoryManager historyManager; //менеджер истории
 
     public InMemoryTasksManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
@@ -58,7 +58,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     //Добавление подзадачи к эпику.
-    private void setSubTasks(long epicId, SubTask newSubTask) {
+    protected void setSubTasks(long epicId, SubTask newSubTask) {
         Epic epic = (Epic) tasks.get(epicId); //найти нужный эпик
         ArrayList<Long> subTasks = epic.getSubTasks();
         subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
@@ -157,6 +157,7 @@ public class InMemoryTasksManager implements TaskManager {
     //Получение списка просмотренных задач.
     @Override
     public List<Task> getHistory() {
+
         return historyManager.getHistory();
     }
 
