@@ -5,6 +5,7 @@ import ru.yandex.practicum.tracker.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 //интерфейс менеджера задач
 public interface TaskManager {
@@ -35,5 +36,8 @@ public interface TaskManager {
 
     //Получение списка просмотренных задач.
     List<Task> getHistory();
+
+    //Получение сортированного списка задач.
+    Set<Task> getPrioritizedTasks();
 
 }
