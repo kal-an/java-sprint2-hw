@@ -186,7 +186,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     //сохранение задачи в строку
     private String taskToString(Task task) {
         StringBuilder sb = new StringBuilder();
-
         TaskType type;
 
         if (task instanceof SubTask) {
@@ -196,16 +195,16 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         } else {
             type = TaskType.TASK;
         }
-        sb.append(task.getTaskId()).append(",");
-        sb.append(type).append(",");
-        sb.append(task.getTaskName()).append(",");
-        sb.append(task.getTaskStatus()).append(",");
-        sb.append(task.getTaskDescription()).append(",");
-        sb.append(task.getDuration().toMinutes()).append(",");
-        sb.append(task.getStartTime().format(DATE_TIME_FORMATTER)).append(",");
+        sb.append(task.getTaskId());
+        sb.append(",").append(type);
+        sb.append(",").append(task.getTaskName());
+        sb.append(",").append(task.getTaskStatus());
+        sb.append(",").append(task.getTaskDescription());
+        sb.append(",").append(task.getDuration().toMinutes());
+        sb.append(",").append(task.getStartTime().format(DATE_TIME_FORMATTER));
 
         if (type.equals(TaskType.SUBTASK)) {
-            sb.append(((SubTask) task).getEpicId()).append(",");
+            sb.append(",").append(((SubTask) task).getEpicId());
         }
 
         return sb.toString();
