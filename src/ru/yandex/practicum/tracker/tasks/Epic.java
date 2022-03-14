@@ -33,7 +33,7 @@ public class Epic extends Task{
                 ", taskDescription='" + this.getTaskDescription() + '\'' +
                 ", taskId=" + this.getTaskId() +
                 ", taskStatus='" + this.getTaskStatus() + '\'' +
-                ", duration='" + this.getDuration() + '\'' +
+                ", duration='" + this.getDuration().toMinutes() + '\'' +
                 ", startTime='" + this.getStartTime() + '\'';
         if (this.getSubTasks() != null) {
             result = result + ", subTasks=" + subTasks.toString() + '}';

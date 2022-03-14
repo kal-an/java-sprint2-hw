@@ -89,7 +89,7 @@ public class Task {
                 ", taskDescription='" + taskDescription + '\'' +
                 ", taskId=" + taskId +
                 ", taskStatus=" + taskStatus +
-                ", duration=" + duration +
+                ", duration=" + duration.toMinutes() +
                 ", startTime=" + startTime +
                 '}';
     }
