@@ -58,26 +58,12 @@ public class InMemoryTasksManager implements TaskManager {
 
     //Добавление подзадачи к эпику.
     protected void setSubTasks(SubTask newSubTask) {
+        long subTaskDuration = newSubTask.getDuration().toMinutes();
         long epicId = newSubTask.getEpicId(); //найти нужный эпик
-        ArrayList<Long> subTasks = ((Epic) tasks.get(epicId)).getSubTasks();
-        setEpicDurationAddition(newSubTask);
-        subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
-    }
-
-    //Обновление продолжительности эпика при добавлении подзадачи
-    protected void setEpicDurationAddition(SubTask newSubTask) {
-        long subTaskDuration = newSubTask.getDuration().toMinutes();
-        long epicId = newSubTask.getEpicId();
         Epic epic = (Epic) tasks.get(epicId);
+        ArrayList<Long> subTasks = epic.getSubTasks();
         epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
-    }
-
-    //Обновление продолжительности эпика при удалении подзадачи
-    protected void setEpicDurationSubtraction(SubTask newSubTask) {
-        long subTaskDuration = newSubTask.getDuration().toMinutes();
-        long epicId = newSubTask.getEpicId();
-        Epic epic = (Epic) tasks.get(epicId);
-        epic.setDuration(epic.getDuration().minusMinutes(subTaskDuration));
+        subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
     }
 
     //Получение задачи любого типа по идентификатору.
@@ -157,8 +143,12 @@ public class InMemoryTasksManager implements TaskManager {
         }
         //удаление задачи из эпика, если переданный ID является подзадачей
         if (tasks.get(newTaskId) instanceof SubTask) {
+            SubTask newSubTask = (SubTask) tasks.get(newTaskId);
+            long subTaskDuration = newSubTask.getDuration().toMinutes();
+            long epicId = newSubTask.getEpicId();
+            Epic epic = (Epic) tasks.get(epicId);
+            epic.setDuration(epic.getDuration().minusMinutes(subTaskDuration));
             removeSubTaskFromEpic(newTaskId);
-            setEpicDurationSubtraction((SubTask) tasks.get(newTaskId));
         }
         tasks.remove(newTaskId); //удалить задачу
         historyManager.remove(newTaskId); //удалить задачу из просмотров
