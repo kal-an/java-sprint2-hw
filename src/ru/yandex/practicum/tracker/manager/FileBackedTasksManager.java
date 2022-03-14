@@ -7,6 +7,9 @@ import ru.yandex.practicum.tracker.tasks.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,6 +181,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         sb.append(task.getTaskName()).append(",");
         sb.append(task.getTaskStatus()).append(",");
         sb.append(task.getTaskDescription()).append(",");
+        sb.append(task.getDuration()).append(",");
+        sb.append(task.getStartTime()).append(",");
 
         if (type.equals(TaskType.SUBTASK)) {
             sb.append(((SubTask) task).getEpicId()).append(",");
@@ -194,16 +199,19 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         String name = line[2];
         State status = State.valueOf(line[3]);
         String description = line[4];
+        Duration duration = Duration.ofMinutes(Long.parseLong(line[6]));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        LocalDateTime startTime = LocalDateTime.parse(line[7], formatter);
         Task task ;
 
         if (type == TaskType.SUBTASK) {
-            long epicId = Long.parseLong(line[5]);
-            task = new SubTask(name, description, id, status, epicId);
+            long epicId = Long.parseLong(line[7]);
+            task = new SubTask(name, description, id, status, epicId, duration, startTime);
             setSubTasks((SubTask) task);
         } else if (type == TaskType.EPIC) {
-            task = new Epic(name, description, id, status);
+            task = new Epic(name, description, id, status, duration, startTime);
         } else {
-            task = new Task(name, description, id, status);
+            task = new Task(name, description, id, status, duration, startTime);
         }
 
         return task;
