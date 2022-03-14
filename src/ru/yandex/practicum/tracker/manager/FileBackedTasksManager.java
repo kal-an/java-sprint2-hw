@@ -97,6 +97,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return super.getSubTasks(epicId);
     }
 
+    @Override
     protected void setSubTasks(SubTask newSubTask) {
         super.setSubTasks(newSubTask);
         save();
@@ -117,6 +118,12 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     @Override
     public void updateTask(Task newTask) {
         super.updateTask(newTask);
+        save();
+    }
+
+    @Override
+    protected void setTaskStatus(Task task, State newStatus) {
+        super.setTaskStatus(task, newStatus);
         save();
     }
 
@@ -199,10 +206,10 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         String name = line[2];
         State status = State.valueOf(line[3]);
         String description = line[4];
-        Duration duration = Duration.ofMinutes(Long.parseLong(line[6]));
+        Duration duration = Duration.ofMinutes(Long.parseLong(line[5]));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        LocalDateTime startTime = LocalDateTime.parse(line[7], formatter);
-        Task task ;
+        LocalDateTime startTime = LocalDateTime.parse(line[6], formatter);
+        Task task;
 
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[7]);
