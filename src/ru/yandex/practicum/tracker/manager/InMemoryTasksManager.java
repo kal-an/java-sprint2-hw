@@ -6,9 +6,7 @@ import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
     protected static HashMap<Long, Task> tasks = null; //таблица всех задач
@@ -170,6 +168,13 @@ public class InMemoryTasksManager implements TaskManager {
     //проверить есть ли задачи в таблице
     private boolean isAnyTasks() {
         return !tasks.isEmpty();
+    }
+
+    //Получить список задач в порядке приоритета
+    private Set<Task> getPrioritizedTasks() {
+        Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
+
+        return new TreeSet<>(taskComparator);
     }
 
 }
