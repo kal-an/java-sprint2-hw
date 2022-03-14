@@ -1,5 +1,7 @@
 package ru.yandex.practicum.tracker.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 //класс для крупных задач
@@ -9,8 +11,10 @@ public class Epic extends Task{
     public Epic(String taskName,
                 String taskDescription,
                 long taskId,
-                State taskStatus) {
-        super(taskName, taskDescription, taskId, taskStatus);
+                State taskStatus,
+                Duration duration,
+                LocalDateTime startTime) {
+        super(taskName, taskDescription, taskId, taskStatus, duration, startTime);
     }
 
     public ArrayList<Long> getSubTasks() {

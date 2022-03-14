@@ -1,5 +1,8 @@
 package ru.yandex.practicum.tracker.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 //класс для подзадач
 public class SubTask extends Task{
     private long epicId;
@@ -8,8 +11,10 @@ public class SubTask extends Task{
                    String taskDescription,
                    long taskId,
                    State taskStatus,
-                   long epicId) {
-        super(taskName, taskDescription, taskId, taskStatus);
+                   long epicId,
+                   Duration duration,
+                   LocalDateTime startTime) {
+        super(taskName, taskDescription, taskId, taskStatus, duration, startTime);
         this.epicId = epicId;
     }
 
