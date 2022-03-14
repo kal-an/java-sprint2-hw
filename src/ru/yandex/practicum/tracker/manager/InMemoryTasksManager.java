@@ -99,13 +99,12 @@ public class InMemoryTasksManager implements TaskManager {
                 } else { //если есть задачи в процессе выполнения, то эпик на выполнении
                     setTaskStatus(epic, State.IN_PROGRESS);
                 }
-
             }
         }
     }
 
     //установить статус задачи
-    private void setTaskStatus(Task task, State newStatus) {
+    protected void setTaskStatus(Task task, State newStatus) {
         tasks.get(task.getTaskId()).setTaskStatus(newStatus);
     }
 
