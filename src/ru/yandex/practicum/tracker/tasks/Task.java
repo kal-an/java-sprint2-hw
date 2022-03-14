@@ -67,6 +67,16 @@ public class Task {
         return duration;
     }
 
+    //задать продолжительность задачи
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    //задать время старта задачи
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     //получить дату начала выполнения
     public LocalDateTime getStartTime() {
         return startTime;
