@@ -1,7 +1,6 @@
 package ru.yandex.practicum.tracker.manager;
 
 import ru.yandex.practicum.tracker.manager.history.HistoryManager;
-import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
@@ -62,6 +61,23 @@ public class InMemoryTasksManager implements TaskManager {
         long epicId = newSubTask.getEpicId(); //найти нужный эпик
         ArrayList<Long> subTasks = ((Epic) tasks.get(epicId)).getSubTasks();
         subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
+        setEpicDurationAddition(newSubTask);
+    }
+
+    //Обновление продолжительности эпика при добавлении подзадачи
+    protected void setEpicDurationAddition(SubTask newSubTask) {
+        long subTaskDuration = newSubTask.getDuration().toMinutes();
+        long epicId = newSubTask.getEpicId();
+        Epic epic = (Epic) tasks.get(epicId);
+        epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
+    }
+
+    //Обновление продолжительности эпика при удалении подзадачи
+    protected void setEpicDurationSubtraction(SubTask newSubTask) {
+        long subTaskDuration = newSubTask.getDuration().toMinutes();
+        long epicId = newSubTask.getEpicId();
+        Epic epic = (Epic) tasks.get(epicId);
+        epic.setDuration(epic.getDuration().minusMinutes(subTaskDuration));
     }
 
     //Получение задачи любого типа по идентификатору.
@@ -80,6 +96,7 @@ public class InMemoryTasksManager implements TaskManager {
 
         if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
             setSubTasks((SubTask) newTask);
+            setEpicDurationAddition((SubTask) newTask);
         }
     }
 
@@ -93,6 +110,7 @@ public class InMemoryTasksManager implements TaskManager {
             if (newTask instanceof SubTask) { //если это подзадача
                 long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
                 Epic epic = (Epic) tasks.get(epicId);
+                setEpicDurationAddition((SubTask) newTask);
                 if (isAllSubTaskInEpicDone(epic)) {
                     //если все подзадачи готовы, то эпик тоже готов
                     setTaskStatus(epic, State.DONE);
@@ -142,6 +160,7 @@ public class InMemoryTasksManager implements TaskManager {
         //удаление задачи из эпика, если переданный ID является подзадачей
         if (tasks.get(newTaskId) instanceof SubTask) {
             removeSubTaskFromEpic(newTaskId);
+            setEpicDurationSubtraction((SubTask) tasks.get(newTaskId));
         }
         tasks.remove(newTaskId); //удалить задачу
         historyManager.remove(newTaskId); //удалить задачу из просмотров
