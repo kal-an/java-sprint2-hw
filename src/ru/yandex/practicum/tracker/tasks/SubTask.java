@@ -24,7 +24,9 @@ public class SubTask extends Task{
                 "taskName='" + this.getTaskName() + '\'' +
                 ", taskDescription='" + this.getTaskDescription() + '\'' +
                 ", taskId=" + this.getTaskId() +
-                ", taskStatus='" + this.getTaskStatus() + '\'';
+                ", taskStatus='" + this.getTaskStatus() + '\'' +
+                ", duration='" + this.getDuration() + '\'' +
+                ", startTime='" + this.getStartTime() + '\'';
     }
 
     public long getEpicId() {
