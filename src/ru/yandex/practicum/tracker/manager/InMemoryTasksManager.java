@@ -60,8 +60,8 @@ public class InMemoryTasksManager implements TaskManager {
     protected void setSubTasks(SubTask newSubTask) {
         long epicId = newSubTask.getEpicId(); //найти нужный эпик
         ArrayList<Long> subTasks = ((Epic) tasks.get(epicId)).getSubTasks();
-        subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
         setEpicDurationAddition(newSubTask);
+        subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
     }
 
     //Обновление продолжительности эпика при добавлении подзадачи
@@ -96,7 +96,6 @@ public class InMemoryTasksManager implements TaskManager {
 
         if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
             setSubTasks((SubTask) newTask);
-            setEpicDurationAddition((SubTask) newTask);
         }
     }
 
@@ -110,7 +109,6 @@ public class InMemoryTasksManager implements TaskManager {
             if (newTask instanceof SubTask) { //если это подзадача
                 long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
                 Epic epic = (Epic) tasks.get(epicId);
-                setEpicDurationAddition((SubTask) newTask);
                 if (isAllSubTaskInEpicDone(epic)) {
                     //если все подзадачи готовы, то эпик тоже готов
                     setTaskStatus(epic, State.DONE);
