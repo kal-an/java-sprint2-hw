@@ -206,7 +206,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         sb.append(task.getTaskStatus()).append(",");
         sb.append(task.getTaskDescription()).append(",");
         sb.append(task.getDuration().toMinutes()).append(",");
-        sb.append(task.getStartTime()).append(",");
+        sb.append(task.getStartTime().format(DATE_TIME_FORMATTER)).append(",");
 
         if (type.equals(TaskType.SUBTASK)) {
             sb.append(((SubTask) task).getEpicId()).append(",");
