@@ -39,9 +39,7 @@ public class Generator {
         long epicId1 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
                 epicId1,
-                State.NEW,
-                Duration.ofMinutes(0),
-                LocalDateTime.now()));
+                State.NEW));
 
         long subTaskId1 = TaskId.getNewId();
         taskManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
@@ -70,9 +68,7 @@ public class Generator {
         long epicId2 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
                 epicId2,
-                State.NEW,
-                Duration.ofMinutes(0),
-                LocalDateTime.now()));
+                State.NEW));
 
         System.out.println("    Запрос задачи  " + taskManager.getTask(epicId2));
         printHistory();

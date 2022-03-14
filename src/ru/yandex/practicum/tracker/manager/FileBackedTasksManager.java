@@ -48,9 +48,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         long epicId1 = TaskId.getNewId();
         fileBackedTasksManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
                 epicId1,
-                State.NEW,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                State.NEW));
 
         long subTaskId1 = TaskId.getNewId();
         fileBackedTasksManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
@@ -79,9 +77,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         long epicId2 = TaskId.getNewId();
         fileBackedTasksManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
                 epicId2,
-                State.NEW,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                State.NEW));
 
         System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
         System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId1));
@@ -232,7 +228,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             task = new SubTask(name, description, id, status, epicId, duration, startTime);
             setSubTasks((SubTask) task);
         } else if (type == TaskType.EPIC) {
-            task = new Epic(name, description, id, status, duration, startTime);
+            task = new Epic(name, description, id, status);
         } else {
             task = new Task(name, description, id, status, duration, startTime);
         }

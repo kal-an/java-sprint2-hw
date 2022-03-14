@@ -4,11 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-//TODO: С классом Epic придётся поработать дополнительно.
-// Продолжительность эпика — сумма продолжительности всех его подзадач,
-// а время начала — дата старта первой подзадачи.
-// Оба новых поля этого класса будут расчётные — аналогично полю статуса.
-
 //класс для крупных задач
 public class Epic extends Task{
     private ArrayList<Long> subTasks= new ArrayList<>(); //список id подзадач эпика
@@ -16,10 +11,8 @@ public class Epic extends Task{
     public Epic(String taskName,
                 String taskDescription,
                 long taskId,
-                State taskStatus,
-                Duration duration,
-                LocalDateTime startTime) {
-        super(taskName, taskDescription, taskId, taskStatus, duration, startTime);
+                State taskStatus) {
+        super(taskName, taskDescription, taskId, taskStatus, Duration.ZERO, LocalDateTime.now());
     }
 
     public ArrayList<Long> getSubTasks() {
