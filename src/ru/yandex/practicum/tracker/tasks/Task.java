@@ -1,5 +1,7 @@
 package ru.yandex.practicum.tracker.tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 //класс для задач
@@ -8,15 +10,21 @@ public class Task {
     private String taskDescription;
     private long taskId;
     private State taskStatus;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     public Task(String taskName,
                 String taskDescription,
                 long taskId,
-                State taskStatus) {
+                State taskStatus,
+                Duration duration,
+                LocalDateTime startTime) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskId = taskId;
         this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     //задать имя задачи
@@ -54,13 +62,25 @@ public class Task {
         return taskStatus;
     }
 
+    //получить продолжительность задачи
+    public Duration getDuration() {
+        return duration;
+    }
+
+    //получить дату начала выполнения
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
                 "taskName='" + taskName + '\'' +
                 ", taskDescription='" + taskDescription + '\'' +
                 ", taskId=" + taskId +
-                ", taskStatus='" + taskStatus + '\'' +
+                ", taskStatus=" + taskStatus +
+                ", duration=" + duration +
+                ", startTime=" + startTime +
                 '}';
     }
 
@@ -72,11 +92,13 @@ public class Task {
         return taskId == task.taskId &&
                 taskName.equals(task.taskName) &&
                 taskDescription.equals(task.taskDescription) &&
-                taskStatus.equals(task.taskStatus);
+                taskStatus.equals(task.taskStatus) &&
+                startTime.equals(task.startTime);
     }
+
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskName, taskDescription, taskId, taskStatus);
+        return Objects.hash(taskName, taskDescription, taskId, taskStatus, startTime);
     }
 }
