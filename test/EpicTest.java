@@ -28,7 +28,8 @@ class EpicTest {
     @Test
     public void shouldSetStatusNewWhenEpicCreated() {
         long epicId = TaskId.getNewId();
-        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год", epicId);
+        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW, epicId);
         taskManager.addTask(epic);
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
     }
@@ -36,7 +37,8 @@ class EpicTest {
     @Test
     public void shouldSetStatusEpicNewWhenNewSubTasks() {
         long epicId = TaskId.getNewId();
-        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год", epicId);
+        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW, epicId);
         taskManager.addTask(epic);
 
         long subTaskId1 = TaskId.getNewId();
@@ -63,7 +65,8 @@ class EpicTest {
     @Test
     public void shouldSetStatusEpicNewWhenAllSubTaskIsDone() {
         long epicId = TaskId.getNewId();
-        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год", epicId);
+        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW, epicId);
         taskManager.addTask(epic);
 
         long subTaskId1 = TaskId.getNewId();
@@ -104,7 +107,8 @@ class EpicTest {
     @Test
     public void shouldSetStatusEpicInProgressWhenOneSubTaskIsDone() {
         long epicId = TaskId.getNewId();
-        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год", epicId);
+        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW, epicId);
         taskManager.addTask(epic);
 
         long subTaskId1 = TaskId.getNewId();
@@ -138,7 +142,8 @@ class EpicTest {
     @Test
     public void shouldSetStatusEpicInProgressWhenAllSubTaskIsInProgress() {
         long epicId = TaskId.getNewId();
-        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год", epicId);
+        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW, epicId);
         taskManager.addTask(epic);
 
         long subTaskId1 = TaskId.getNewId();
