@@ -12,9 +12,10 @@ public class SubTask extends Task{
                    String taskDescription,
                    long taskId,
                    long epicId,
+                   State taskStatus,
                    Duration duration,
                    LocalDateTime startTime) {
-        super(taskName, taskDescription, taskId, State.NEW, duration, startTime);
+        super(taskName, taskDescription, taskId, taskStatus, duration, startTime);
         this.epicId = epicId;
     }
 
