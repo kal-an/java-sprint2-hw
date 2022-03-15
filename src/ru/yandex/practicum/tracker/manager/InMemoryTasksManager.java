@@ -11,10 +11,13 @@ import java.util.*;
 public class InMemoryTasksManager implements TaskManager {
     protected static HashMap<Long, Task> tasks = null; //таблица всех задач
     protected HistoryManager historyManager; //менеджер истории
+    private Set<Task> sortedTasks; //сортированные задачи
 
     public InMemoryTasksManager(HistoryManager historyManager) {
         tasks = new HashMap<>();
         this.historyManager = historyManager;
+        Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
+        sortedTasks = new TreeSet<>(taskComparator);
     }
 
     //Получение списка всех задач.
@@ -80,6 +83,7 @@ public class InMemoryTasksManager implements TaskManager {
     public void addTask(Task newTask) {
         newTask.setTaskStatus(State.NEW); //установить статус Новая
         tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
+        sortedTasks.add(newTask);
 
         if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
             setSubTasks((SubTask) newTask);
@@ -175,9 +179,6 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public Set<Task> getPrioritizedTasks() {
-        Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
-        Set<Task> sortedTasks = new TreeSet<>(taskComparator);
-        sortedTasks.addAll(tasks.values());
         return sortedTasks;
     }
 
