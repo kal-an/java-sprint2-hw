@@ -11,9 +11,8 @@ public class Epic extends Task{
 
     public Epic(String taskName,
                 String taskDescription,
-                long taskId,
-                State taskStatus) {
-        super(taskName, taskDescription, taskId, taskStatus, Duration.ZERO, LocalDateTime.now());
+                long taskId) {
+        super(taskName, taskDescription, taskId, State.NEW, Duration.ZERO, LocalDateTime.now());
     }
 
     public ArrayList<Long> getSubTasks() {
