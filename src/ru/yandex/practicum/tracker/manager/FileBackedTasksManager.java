@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
@@ -32,61 +33,73 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     private static void start() {
         File file = new File(BACKUP_FILE);
         fileBackedTasksManager = loadFromFile(file);
-        long taskId1 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new Task("Задача 1", "Собрание в 14:00",
-                taskId1,
-                State.IN_PROGRESS,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
-        long taskId2 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new Task("Задача 2", "Вынести мусор",
-                taskId2,
-                State.NEW,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
+//        long taskId1 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new Task("Задача 1", "Собрание в 14:00",
+//                taskId1,
+//                State.IN_PROGRESS,
+//                Duration.ofMinutes(5),
+//                LocalDateTime.now()));
+//        long taskId2 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new Task("Задача 2", "Вынести мусор",
+//                taskId2,
+//                State.NEW,
+//                Duration.ofMinutes(5),
+//                LocalDateTime.now()));
+//
+//        long epicId1 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
+//                epicId1));
+//
+//        long subTaskId1 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
+//                subTaskId1,
+//                State.NEW,
+//                epicId1,
+//                Duration.ofMinutes(5),
+//                LocalDateTime.now()));
+//
+//        long subTaskId2 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new SubTask("Подзадача 2", "Пригласить друзей",
+//                subTaskId2,
+//                State.NEW,
+//                epicId1,
+//                Duration.ofMinutes(5),
+//                LocalDateTime.now()));
+//
+//        long subTaskId3 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new SubTask("Подзадача 3", "За продуктами",
+//                subTaskId3,
+//                State.NEW,
+//                epicId1,
+//                Duration.ofMinutes(5),
+//                LocalDateTime.now()));
+//        fileBackedTasksManager.updateTask(new SubTask("Подзадача 3", "За продуктами",
+//                subTaskId3,
+//                State.IN_PROGRESS,
+//                epicId1,
+//                Duration.ofMinutes(5),
+//                LocalDateTime.now()));
+//
+//        long epicId2 = TaskId.getNewId();
+//        fileBackedTasksManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
+//                epicId2));
 
-        long epicId1 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
-                epicId1));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId1));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId3));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId1));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId1));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(taskId1));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId2));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
+//        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId1));
 
-        long subTaskId1 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
-                subTaskId1,
-                State.NEW,
-                epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
-
-        long subTaskId2 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new SubTask("Подзадача 2", "Пригласить друзей",
-                subTaskId2,
-                State.NEW,
-                epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
-
-        long subTaskId3 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new SubTask("Подзадача 3", "За продуктами",
-                subTaskId3,
-                State.NEW,
-                epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
-
-        long epicId2 = TaskId.getNewId();
-        fileBackedTasksManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
-                epicId2));
-
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId1));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId3));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId1));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId1));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(taskId1));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(subTaskId2));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId2));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(epicId1));
+        for (Map.Entry<Long, Task> longTaskEntry : tasks.entrySet()) {
+            System.out.println(longTaskEntry.getKey() + " " + longTaskEntry.getValue());
+        }
+        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(1));
+        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(3));
     }
 
     @Override
@@ -225,7 +238,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             task = new SubTask(name, description, id, status, epicId, duration, startTime);
             setSubTasks((SubTask) task);
         } else if (type == TaskType.EPIC) {
-            task = new Epic(name, description, id);
+            task = new Epic(name, description, status, id);
         } else {
             task = new Task(name, description, id, status, duration, startTime);
         }
