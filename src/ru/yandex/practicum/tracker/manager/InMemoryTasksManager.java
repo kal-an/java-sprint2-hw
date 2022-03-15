@@ -175,7 +175,10 @@ public class InMemoryTasksManager implements TaskManager {
 
     @Override
     public Set<Task> getPrioritizedTasks() {
-        return null;
+        Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
+        Set<Task> sortedTasks = new TreeSet<>(taskComparator);
+        sortedTasks.addAll(tasks.values());
+        return sortedTasks;
     }
 
 }
