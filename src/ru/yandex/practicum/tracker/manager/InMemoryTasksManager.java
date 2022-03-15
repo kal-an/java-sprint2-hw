@@ -1,5 +1,6 @@
 package ru.yandex.practicum.tracker.manager;
 
+import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.history.HistoryManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
@@ -83,7 +84,9 @@ public class InMemoryTasksManager implements TaskManager {
     public void addTask(Task newTask) {
         newTask.setTaskStatus(State.NEW); //установить статус Новая
         tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
-        sortedTasks.add(newTask);
+        if (!isAnyTaskIntersections(newTask)) {
+            sortedTasks.add(newTask); //добавить задачу в сортированное множество
+        }
 
         if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
             setSubTasks((SubTask) newTask);
@@ -107,6 +110,15 @@ public class InMemoryTasksManager implements TaskManager {
                     setTaskStatus(epic, State.IN_PROGRESS);
                 }
             }
+        }
+    }
+
+    //Проверить есть ли такая задача во множестве сортированных задач
+    protected boolean isAnyTaskIntersections(Task newTask) {
+        if (sortedTasks.contains(newTask)) {
+            throw new ManagerTaskException("Невозможно запланировать задачу на это время");
+        } else {
+            return false;
         }
     }
 
