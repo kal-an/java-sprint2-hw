@@ -82,7 +82,7 @@ public class InMemoryTasksManager implements TaskManager {
     //Добавление новой задачи, эпика и подзадачи.
     @Override
     public void addTask(Task newTask) {
-        newTask.setTaskStatus(State.NEW); //установить статус Новая
+//        newTask.setTaskStatus(State.NEW); //установить статус Новая //TODO: исправить проблему, нужно перенести в конструктор
         tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
         if (!isAnyTaskIntersections(newTask)) {
             sortedTasks.add(newTask); //добавить задачу в сортированное множество

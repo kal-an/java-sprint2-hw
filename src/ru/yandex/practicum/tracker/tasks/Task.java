@@ -22,7 +22,7 @@ public class Task {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.taskId = taskId;
-        this.taskStatus = taskStatus;
+        this.taskStatus = State.NEW;
         this.duration = duration;
         this.startTime = startTime;
     }
