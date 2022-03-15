@@ -11,8 +11,8 @@ public class SubTask extends Task{
     public SubTask(String taskName,
                    String taskDescription,
                    long taskId,
-                   long epicId,
                    State taskStatus,
+                   long epicId,
                    Duration duration,
                    LocalDateTime startTime) {
         super(taskName, taskDescription, taskId, taskStatus, duration, startTime);
