@@ -52,6 +52,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         long subTaskId1 = TaskId.getNewId();
         fileBackedTasksManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
                 subTaskId1,
+                State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
                 LocalDateTime.now()));
@@ -59,6 +60,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         long subTaskId2 = TaskId.getNewId();
         fileBackedTasksManager.addTask(new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
+                State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
                 LocalDateTime.now()));
@@ -66,6 +68,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         long subTaskId3 = TaskId.getNewId();
         fileBackedTasksManager.addTask(new SubTask("Подзадача 3", "За продуктами",
                 subTaskId3,
+                State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
                 LocalDateTime.now()));
@@ -219,14 +222,13 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[7]);
-            task = new SubTask(name, description, id, epicId, duration, startTime);
+            task = new SubTask(name, description, id, status, epicId, duration, startTime);
             setSubTasks((SubTask) task);
         } else if (type == TaskType.EPIC) {
             task = new Epic(name, description, id);
         } else {
             task = new Task(name, description, id, status, duration, startTime);
         }
-        task.setTaskStatus(status);
 
         return task;
     }
