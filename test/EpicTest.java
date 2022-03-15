@@ -10,10 +10,6 @@ import ru.yandex.practicum.tracker.tasks.TaskId;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 //класс тестирования для эпика
 class EpicTest {
