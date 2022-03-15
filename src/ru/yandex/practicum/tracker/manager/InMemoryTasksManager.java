@@ -60,6 +60,9 @@ public class InMemoryTasksManager implements TaskManager {
         long epicId = newSubTask.getEpicId(); //найти нужный эпик
         Epic epic = (Epic) tasks.get(epicId);
         ArrayList<Long> subTasks = epic.getSubTasks();
+        if (epic.getDuration().toMinutes() == 0) { //если продолжительность эпика 0
+            epic.setStartTime(newSubTask.getStartTime()); //установить время по подзадаче
+        }
         epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
         subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
     }
@@ -170,11 +173,9 @@ public class InMemoryTasksManager implements TaskManager {
         return !tasks.isEmpty();
     }
 
-    //Получить список задач в порядке приоритета
-    private Set<Task> getPrioritizedTasks() {
-        Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
-
-        return new TreeSet<>(taskComparator);
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        return null;
     }
 
 }
