@@ -32,7 +32,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
-        return loadFromFile(file);
+        fileBackedTasksManager = loadFromFile(file);
+        return fileBackedTasksManager;
     }
 
     @Override
@@ -56,7 +57,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     @Override
     protected void setSubTasks(SubTask newSubTask) {
         super.setSubTasks(newSubTask);
-        save();
     }
 
     @Override
