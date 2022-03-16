@@ -3,9 +3,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
-import ru.yandex.practicum.tracker.manager.InMemoryTasksManager;
 import ru.yandex.practicum.tracker.manager.TaskManager;
-import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 import ru.yandex.practicum.tracker.tasks.*;
 
 import java.time.Duration;
@@ -14,13 +12,11 @@ import java.util.List;
 
 class FileBackedTasksManagerTest extends TaskManagerTest {
 
-    private static TaskManager fileBackedTasksManager;
+    static TaskManager fileBackedTasksManager;
 
     @BeforeEach
     public void createBeforeEach() {
         fileBackedTasksManager = FileBackedTasksManager.start();
-        historyManager = new InMemoryHistoryManager();
-        taskManager = new InMemoryTasksManager(historyManager);
     }
 
     @Test
@@ -97,10 +93,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
                 State.NEW,
                 epicId2));
 
-        fileBackedTasksManager.getTask(1);
-        fileBackedTasksManager.getTask(3);
-        fileBackedTasksManager.getTask(5);
-        fileBackedTasksManager.getTask(4);
+        fileBackedTasksManager.getTask(taskId1);
+        fileBackedTasksManager.getTask(subTaskId2);
+        fileBackedTasksManager.getTask(taskId2);
+        fileBackedTasksManager.getTask(epicId2);
 
     }
 }
