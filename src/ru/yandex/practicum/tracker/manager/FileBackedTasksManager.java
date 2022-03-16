@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //класс менеджера для автосохранения в файл
@@ -220,6 +221,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             String history = fileReader.readLine();
             if (history != null) {
                 recentlyTasks = fromString(history);
+            } else {
+                recentlyTasks = Collections.emptyList();
             }
 
         } catch (IOException e) {
