@@ -33,6 +33,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
         fileBackedTasksManager = loadFromFile(file);
+        fileBackedTasksManager.getTask(1);
+        fileBackedTasksManager.getTask(2);
         return fileBackedTasksManager;
     }
 
@@ -61,8 +63,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     @Override
     public Task getTask(long taskId) {
+        Task task = super.getTask(taskId);
         save();
-        return super.getTask(taskId);
+        return task;
     }
 
     @Override
