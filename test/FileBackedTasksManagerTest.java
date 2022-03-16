@@ -17,11 +17,8 @@ class FileBackedTasksManagerTest {
 
     @Test
     public void shouldReturnTrueWhenTaskListIsEmpty() {
-        List<Task> taskList = fileBackedTasksManager.getAllTasks();
-        if (!taskList.isEmpty()) {
-            fileBackedTasksManager.removeTask();
-        }
-        Assertions.assertTrue(taskList.isEmpty());
+        fileBackedTasksManager.removeTask();
+        Assertions.assertTrue(fileBackedTasksManager.getAllTasks().isEmpty());
     }
 
     @Test
