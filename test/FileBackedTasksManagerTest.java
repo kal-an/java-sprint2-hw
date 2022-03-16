@@ -1,19 +1,26 @@
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
+import ru.yandex.practicum.tracker.manager.InMemoryTasksManager;
 import ru.yandex.practicum.tracker.manager.TaskManager;
+import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 import ru.yandex.practicum.tracker.tasks.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-class FileBackedTasksManagerTest {
+class FileBackedTasksManagerTest extends TaskManagerTest {
 
     private static TaskManager fileBackedTasksManager;
 
     @BeforeEach
     public void createBeforeEach() {
         fileBackedTasksManager = FileBackedTasksManager.start();
+        historyManager = new InMemoryHistoryManager();
+        taskManager = new InMemoryTasksManager(historyManager);
     }
 
     @Test
