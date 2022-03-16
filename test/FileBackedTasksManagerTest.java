@@ -1,15 +1,14 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
-import ru.yandex.practicum.tracker.tasks.SubTask;
-import ru.yandex.practicum.tracker.tasks.Task;
+import ru.yandex.practicum.tracker.tasks.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 class FileBackedTasksManagerTest {
 
-    private FileBackedTasksManager fileBackedTasksManager;
+    private static FileBackedTasksManager fileBackedTasksManager;
 
     @BeforeEach
     public void createBeforeEach() {
@@ -19,6 +18,9 @@ class FileBackedTasksManagerTest {
     @Test
     public void shouldReturnTrueWhenTaskListIsEmpty() {
         List<Task> taskList = fileBackedTasksManager.getAllTasks();
+        if (!taskList.isEmpty()) {
+            fileBackedTasksManager.removeTask();
+        }
         Assertions.assertTrue(taskList.isEmpty());
     }
 
@@ -30,7 +32,70 @@ class FileBackedTasksManagerTest {
 
     @Test
     public void shouldReturnTrueWhenHistoryIsEmpty() {
-        List<Task> taskList = fileBackedTasksManager.getHistory();
-        Assertions.assertTrue(taskList.isEmpty());
+        fileBackedTasksManager.removeTask();
+        Assertions.assertTrue(fileBackedTasksManager.getHistory().isEmpty());
+    }
+
+    @AfterAll
+    public static void createAfterAll() {
+        long taskId1 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new Task("Задача 1", "Собрание в 14:00",
+                taskId1,
+                State.NEW,
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2022, 3, 15, 10, 30)));
+        long taskId2 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new Task("Задача 2", "Вынести мусор",
+                taskId2,
+                State.NEW,
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2022, 3, 15, 12, 30)));
+
+        long epicId1 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW,
+                epicId1));
+
+        long subTaskId1 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
+                subTaskId1,
+                State.NEW,
+                epicId1,
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2022, 3, 15, 13, 30)));
+
+        long subTaskId2 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new SubTask("Подзадача 2", "Пригласить друзей",
+                subTaskId2,
+                State.NEW,
+                epicId1,
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2022, 3, 15, 15, 30)));
+
+        fileBackedTasksManager.updateTask(new SubTask("Подзадача 2", "Пригласить друзей",
+                subTaskId2,
+                State.IN_PROGRESS,
+                epicId1,
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2022, 3, 15, 15, 30)));
+
+        long subTaskId3 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new SubTask("Подзадача 3", "За продуктами",
+                subTaskId3,
+                State.NEW,
+                epicId1,
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2022, 3, 14, 2, 30)));
+
+        long epicId2 = TaskId.getNewId();
+        fileBackedTasksManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
+                State.NEW,
+                epicId2));
+
+        fileBackedTasksManager.getTask(1);
+        fileBackedTasksManager.getTask(3);
+        fileBackedTasksManager.getTask(5);
+        fileBackedTasksManager.getTask(4);
+
     }
 }
