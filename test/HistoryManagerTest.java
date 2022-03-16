@@ -45,4 +45,44 @@ class HistoryManagerTest {
         List<Task> taskList = historyManager.getHistory();
         Assertions.assertIterableEquals(List.of(task2, task1), taskList);
     }
+
+    @Test
+    public void shouldCheckRemovingFromHistory() {
+        Task task1 = new Task("Задача 1", "Собрание в 14:00",
+                1,
+                State.NEW,
+                Duration.ofMinutes(15),
+                LocalDateTime.of(2022, 3, 15, 10, 30));
+        Task task2 = new Task("Задача 2", "Собрание в 14:30",
+                2,
+                State.NEW,
+                Duration.ofMinutes(10),
+                LocalDateTime.of(2022, 3, 14, 14, 30));
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task1);
+        historyManager.remove(2L);
+
+        Assertions.assertIterableEquals(List.of(task1), historyManager.getHistory());
+    }
+
+    @Test
+    public void shouldCheckClearHistory() {
+        Task task1 = new Task("Задача 1", "Собрание в 14:00",
+                1,
+                State.NEW,
+                Duration.ofMinutes(15),
+                LocalDateTime.of(2022, 3, 15, 10, 30));
+        Task task2 = new Task("Задача 2", "Собрание в 14:30",
+                2,
+                State.NEW,
+                Duration.ofMinutes(10),
+                LocalDateTime.of(2022, 3, 14, 14, 30));
+        historyManager.add(task1);
+        historyManager.add(task2);
+        historyManager.add(task1);
+        historyManager.clear();
+
+        Assertions.assertIterableEquals(List.of(), historyManager.getHistory());
+    }
 }
