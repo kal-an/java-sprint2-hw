@@ -27,7 +27,8 @@ public class SubTask extends Task{
                 ", taskId=" + this.getTaskId() +
                 ", taskStatus='" + this.getTaskStatus() + '\'' +
                 ", duration='" + this.getDuration().toMinutes() + '\'' +
-                ", startTime='" + this.getStartTime() + '\'';
+                ", startTime='" + this.getStartTime() + '\'' +
+                ", epicId='" + this.getEpicId() + '\'';
     }
 
     @Override
