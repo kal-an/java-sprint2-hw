@@ -5,6 +5,7 @@ import ru.yandex.practicum.tracker.manager.history.HistoryManager;
 import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.Task;
+import ru.yandex.practicum.tracker.tasks.TaskId;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,12 +29,12 @@ class HistoryManagerTest {
     @Test
     public void shouldReturnUniqueList() {
         Task task1 = new Task("Задача 1", "Собрание в 14:00",
-                1,
+                TaskId.getNewId(),
                 State.NEW,
                 Duration.ofMinutes(15),
                 LocalDateTime.of(2022, 3, 15, 10, 30));
         Task task2 = new Task("Задача 2", "Собрание в 14:30",
-                2,
+                TaskId.getNewId(),
                 State.NEW,
                 Duration.ofMinutes(10),
                 LocalDateTime.of(2022, 3, 14, 14, 30));
