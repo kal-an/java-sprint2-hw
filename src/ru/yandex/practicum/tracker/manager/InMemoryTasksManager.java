@@ -147,6 +147,7 @@ public class InMemoryTasksManager implements TaskManager {
         if (isAnyTasks()) { //есть ли задачи
             tasks.clear(); //удалить все задачи
         }
+        historyManager.clear();
     }
 
     //Удаление задачи по идентификатору.

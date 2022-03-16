@@ -33,8 +33,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
         fileBackedTasksManager = loadFromFile(file);
-        fileBackedTasksManager.getTask(1);
-        fileBackedTasksManager.getTask(2);
         return fileBackedTasksManager;
     }
 
@@ -103,7 +101,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public List<Task> getHistory() {
         List<Task> list = new ArrayList<>();
         for (Long id : recentlyTasks) {
-            list.add(tasks.get(id));
+            Task task = tasks.get(id);
+            if (task != null) list.add(task);
         }
         return list;
     }
@@ -185,6 +184,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     //сохранить историю просмотров в строку
     private static String toString(HistoryManager historyManager) {
         StringBuilder sb = new StringBuilder();
+
         for (Task task : historyManager.getHistory()) {
             sb.append(task.getTaskId()).append(",");
         }

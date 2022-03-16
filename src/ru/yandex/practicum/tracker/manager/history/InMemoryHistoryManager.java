@@ -63,6 +63,17 @@ public class InMemoryHistoryManager implements HistoryManager {
             }
             return taskList;
         }
+
+        private void removeAllNodes() {
+            for (Node<T> x = head; x != null; ) {
+                Node<T> next = x.next;
+                x.data = null;
+                x.next = null;
+                x.prev = null;
+                x = next;
+            }
+            head = tail = null;
+        }
     }
 
     //добавить новый просмотр задачи
@@ -87,5 +98,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getHistory() {
         return historyTaskList.getTasks(); //вернуть список задач из связного списка
+    }
+
+    @Override
+    public void clear() {
+        historyTaskList.removeAllNodes();
     }
 }
