@@ -38,8 +38,8 @@ public class Generator {
 
         long epicId1 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
-                epicId1,
-                State.NEW));
+                State.NEW,
+                epicId1));
 
         long subTaskId1 = TaskId.getNewId();
         taskManager.addTask(new SubTask("Подзадача 1", "Купить подарки",
@@ -67,8 +67,8 @@ public class Generator {
 
         long epicId2 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
-                epicId2,
-                State.NEW));
+                State.NEW,
+                epicId2));
 
         System.out.println("    Запрос задачи  " + taskManager.getTask(epicId2));
         printHistory();
@@ -97,6 +97,10 @@ public class Generator {
 
         System.out.println("    Удаление задачи  " + epicId1);
         taskManager.removeTask(epicId1);
+        printHistory();
+
+        System.out.println("    Удаление всех задач ");
+        taskManager.removeTask();
         printHistory();
     }
 
