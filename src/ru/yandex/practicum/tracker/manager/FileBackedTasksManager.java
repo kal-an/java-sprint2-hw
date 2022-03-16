@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 //класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
@@ -30,15 +29,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         start();
     }
 
-    private static void start() {
+    public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
-        fileBackedTasksManager = loadFromFile(file);
-
-        for (Map.Entry<Long, Task> longTaskEntry : tasks.entrySet()) {
-            System.out.println(longTaskEntry.getKey() + " " + longTaskEntry.getValue());
-        }
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(1));
-        System.out.println("    Запрос задачи  " + fileBackedTasksManager.getTask(3));
+        return loadFromFile(file);
     }
 
     @Override
@@ -115,7 +108,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     private void save() throws ManagerSaveException {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,duration,startTime,epic").append("\n");
-        
+
         try (BufferedWriter fileWriter = new BufferedWriter(
                 new FileWriter(BACKUP_FILE, StandardCharsets.UTF_8))) {
             fileWriter.write(sb.toString());
@@ -124,7 +117,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 fileWriter.write(taskToString(task));
                 fileWriter.newLine();
             }
-            
+
             fileWriter.newLine();
             fileWriter.write(toString(historyManager));
 
