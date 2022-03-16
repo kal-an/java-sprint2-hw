@@ -218,7 +218,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 }
             }
             String history = fileReader.readLine();
-            recentlyTasks = fromString(history);
+            if (history != null) {
+                recentlyTasks = fromString(history);
+            }
 
         } catch (IOException e) {
             System.out.println("Не удалось восстановить данные из файла");
