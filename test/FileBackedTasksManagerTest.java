@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.*;
 import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
+import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.*;
 
 import java.time.Duration;
@@ -8,7 +9,7 @@ import java.util.List;
 
 class FileBackedTasksManagerTest {
 
-    private static FileBackedTasksManager fileBackedTasksManager;
+    private static TaskManager fileBackedTasksManager;
 
     @BeforeEach
     public void createBeforeEach() {
