@@ -120,7 +120,7 @@ public class InMemoryTasksManager implements TaskManager {
     }
 
     //Проверить есть ли такая задача во множестве сортированных задач
-    protected boolean isAnyTaskIntersections(Task newTask) {
+    private boolean isAnyTaskIntersections(Task newTask) {
         if (sortedTasks.contains(newTask)) {
             throw new ManagerTaskException("Невозможно запланировать задачу на это время");
         } else {
