@@ -104,16 +104,16 @@ public class InMemoryTasksManager implements TaskManager {
     public void updateTask(Task newTask) {
         if (newTask != null) { //если задача не пустая
             State newStatus = newTask.getTaskStatus();
-            setTaskStatus(newTask, newStatus); //установить новый статус
+            tasks.get(newTask.getTaskId()).setTaskStatus(newStatus); //установить новый статус
 
             if (newTask instanceof SubTask) { //если это подзадача
                 long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
                 Epic epic = (Epic) tasks.get(epicId);
                 if (isAllSubTaskInEpicDone(epic)) {
                     //если все подзадачи готовы, то эпик тоже готов
-                    setTaskStatus(epic, State.DONE);
+                    tasks.get(epicId).setTaskStatus(State.DONE);
                 } else { //если есть задачи в процессе выполнения, то эпик на выполнении
-                    setTaskStatus(epic, State.IN_PROGRESS);
+                    tasks.get(epicId).setTaskStatus(State.IN_PROGRESS);
                 }
             }
         }
@@ -126,11 +126,6 @@ public class InMemoryTasksManager implements TaskManager {
         } else {
             return false;
         }
-    }
-
-    //установить статус задачи
-    protected void setTaskStatus(Task task, State newStatus) {
-        tasks.get(task.getTaskId()).setTaskStatus(newStatus);
     }
 
     //проверить готовность подзадач эпика

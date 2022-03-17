@@ -79,12 +79,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     @Override
-    protected void setTaskStatus(Task task, State newStatus) {
-        super.setTaskStatus(task, newStatus);
-        save();
-    }
-
-    @Override
     public void removeTask() {
         super.removeTask();
         save();
