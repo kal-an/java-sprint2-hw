@@ -174,7 +174,7 @@ public abstract class TaskManagerTest {
     }
 
     @Test
-    public void shouldReturnTrueWhenTasksInOneTime() {
+    public void shouldTrowsExceptionWhenTasksInOneTime() {
         long taskId1 = TaskId.getNewId();
         Task task1 = new Task("Задача 1", "Собрание в 14:00",
                 taskId1,
