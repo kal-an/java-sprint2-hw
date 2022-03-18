@@ -5,6 +5,7 @@ import ru.yandex.practicum.tracker.tasks.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 //класс для тестирования
 public class Generator {
@@ -27,14 +28,14 @@ public class Generator {
         taskManager.addTask(new Task("Задача 1", "Собрание в 14:00",
                 taskId1,
                 State.IN_PROGRESS,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                Duration.ofMinutes(60),
+                LocalDateTime.of(2022, 10, 3, 8, 30)));
         long taskId2 = TaskId.getNewId();
         taskManager.addTask(new Task("Задача 2", "Вынести мусор",
                 taskId2,
                 State.NEW,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                Duration.ofMinutes(20),
+                LocalDateTime.of(2022, 10, 3, 9, 35)));
 
         long epicId1 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 1", "Отпраздновать новый год",
@@ -47,15 +48,15 @@ public class Generator {
                 State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                LocalDateTime.of(2022, 10, 3, 10, 30)));
 
         long subTaskId2 = TaskId.getNewId();
         taskManager.addTask(new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
                 State.NEW,
                 epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                Duration.ofMinutes(10),
+                LocalDateTime.of(2022, 10, 3, 11, 30)));
 
         long subTaskId3 = TaskId.getNewId();
         taskManager.addTask(new SubTask("Подзадача 3", "За продуктами",
@@ -63,7 +64,7 @@ public class Generator {
                 State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
-                LocalDateTime.now()));
+                LocalDateTime.of(2022, 10, 3, 12, 37)));
 
         long epicId2 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 2", "Убраться в квартире",
@@ -91,6 +92,11 @@ public class Generator {
         System.out.println("    Запрос задачи  " + taskManager.getTask(epicId1));
         printHistory();
 
+        System.out.println("    Количество задач:  " + taskManager.getAllTasks().size());
+
+        System.out.println("    Задачи по приоритету  ");
+        printTaskByPriority();
+
         System.out.println("    Удаление задачи  " + subTaskId1);
         taskManager.removeTask(subTaskId1);
         printHistory();
@@ -111,5 +117,11 @@ public class Generator {
             System.out.print("  " + task.getTaskId());
         }
         System.out.println();
+    }
+
+    private void printTaskByPriority() {
+        for (Task prioritizedTask : taskManager.getPrioritizedTasks()) {
+            System.out.println(prioritizedTask.getStartTime() + " " + prioritizedTask.getTaskName());
+        }
     }
 }
