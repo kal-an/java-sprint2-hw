@@ -7,6 +7,8 @@ import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
@@ -89,13 +91,22 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public void addTask(Task newTask) {
         if (newTask != null) {
-            tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
-            if (!isAnyTaskIntersections(newTask)) {
+            if (!isAnyTasks()) { //если никаких задач еще нет
                 sortedTasks.add(newTask); //добавить задачу в сортированное множество
-            }
-
-            if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
-                setSubTasks((SubTask) newTask);
+                tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
+            } else {
+                if (isAnyTaskIntersections(newTask)) { //если есть пересечения
+                    throw new ManagerTaskException("Невозможно запланировать задачу на это время");
+                }
+                else {
+                    if (!(newTask instanceof Epic)) { //не учитываем эпики
+                        sortedTasks.add(newTask); //добавить задачу в сортированное множество
+                    }
+                    if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
+                        setSubTasks((SubTask) newTask);
+                    }
+                }
+                tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
             }
         }
     }
@@ -120,13 +131,28 @@ public class InMemoryTasksManager implements TaskManager {
         }
     }
 
-    //Проверить есть ли такая задача во множестве сортированных задач
+    //Проверить есть ли задача на это время
     private boolean isAnyTaskIntersections(Task newTask) {
-        if (sortedTasks.contains(newTask)) {
-            throw new ManagerTaskException("Невозможно запланировать задачу на это время");
-        } else {
-            return false;
+        long newTaskDuration = newTask.getDuration().toMinutes(); //продолжительность новой задачи
+        LocalDateTime newTaskStartTime = newTask.getStartTime(); //время старта новой задачи
+        LocalDateTime newTaskFinishTime = newTaskStartTime
+                .plusMinutes(newTaskDuration); //время финиша новой задачи
+        for (Task task : sortedTasks) {
+            long taskDuration = task.getDuration().toMinutes(); //продолжительность задачи
+            LocalDateTime taskStartTime = task.getStartTime(); //время старта задачи
+            LocalDateTime taskFinishTime = taskStartTime
+                    .plusMinutes(taskDuration); //время финиша задачи
+
+            //если старт или финиш новой задачи
+            // пересекается с текущей задаче по врени старта или ее окончания
+            if (newTaskFinishTime.isAfter(taskStartTime)
+                    && newTaskStartTime.isBefore(taskStartTime)
+                    || newTaskStartTime.isBefore(taskFinishTime)
+                    && newTaskFinishTime.isAfter(taskFinishTime)) {
+                return true;
+            }
         }
+        return false;
     }
 
     //проверить готовность подзадач эпика
