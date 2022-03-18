@@ -1,5 +1,4 @@
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.InMemoryTasksManager;
@@ -33,10 +32,10 @@ public abstract class TaskManagerTest {
                 taskId2,
                 State.NEW,
                 Duration.ofMinutes(5),
-                LocalDateTime.of(2022, 3, 15, 12, 30));
+                LocalDateTime.of(2022, 3, 15, 12, 40));
         taskManager.addTask(task2);
 
-        Assertions.assertIterableEquals(List.of(task2, task1), taskManager.getAllTasks());
+        Assertions.assertIterableEquals(List.of(task1, task2), taskManager.getAllTasks());
     }
 
     @Test
@@ -176,32 +175,24 @@ public abstract class TaskManagerTest {
 
     @Test
     public void shouldReturnTrueWhenTasksInOneTime() {
-        long epicId1 = TaskId.getNewId();
-        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
-                State.NEW,
-                epicId1);
-        taskManager.addTask(epic);
+        long taskId1 = TaskId.getNewId();
+        Task task1 = new Task("Задача 1", "Собрание в 14:00",
+                taskId1,
+                State.IN_PROGRESS,
+                Duration.ofMinutes(60),
+                LocalDateTime.of(2022, 10, 3, 8, 30));
+        taskManager.addTask(task1);
 
-        long subTaskId1 = TaskId.getNewId();
-        SubTask subTask1 = new SubTask("Подзадача 1", "Купить подарки",
-                subTaskId1,
+        long taskId2 = TaskId.getNewId();
+        Task task2 = new Task("Задача 2", "Вынести мусор",
+                taskId2,
                 State.NEW,
-                epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.of(2022, 10, 3, 10, 30));
-        taskManager.addTask(subTask1);
-
-        long subTaskId2 = TaskId.getNewId();
-        SubTask subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
-                subTaskId2,
-                State.NEW,
-                epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.of(2022, 10, 3, 10, 30));
+                Duration.ofMinutes(20),
+                LocalDateTime.of(2022, 10, 3, 9, 29));
 
         ManagerTaskException ex = Assertions.assertThrows(
                 ManagerTaskException.class,
-                () -> taskManager.addTask(subTask2)
+                () -> taskManager.addTask(task2)
         );
         Assertions.assertEquals("Невозможно запланировать задачу на это время", ex.getMessage());
     }
