@@ -67,7 +67,8 @@ public class InMemoryTasksManager implements TaskManager {
         long epicId = newSubTask.getEpicId(); //найти нужный эпик
         Epic epic = (Epic) tasks.get(epicId);
         ArrayList<Long> subTasks = epic.getSubTasks();
-        if (epic.getDuration().toMinutes() == 0) { //если продолжительность эпика 0
+        //если время старта эпика позже чем новая подзадача
+        if (epic.getStartTime().isAfter(newSubTask.getStartTime())) {
             epic.setStartTime(newSubTask.getStartTime()); //установить время по подзадаче
         }
         epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
