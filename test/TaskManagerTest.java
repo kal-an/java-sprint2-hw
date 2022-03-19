@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.InMemoryTasksManager;
 import ru.yandex.practicum.tracker.manager.TaskManager;
@@ -118,6 +119,16 @@ public abstract class TaskManagerTest {
     @Test
     public void shouldReturnNullWhenTaskIdIsNotExist() {
         Assertions.assertNull(taskManager.getTask(45634));
+    }
+
+    @Test
+    public void shouldThrowsWhenRemoveTaskIsNotExist() {
+        long taskId1 = 1423;
+        ManagerTaskException ex = Assertions.assertThrows(
+                ManagerTaskException.class,
+                () -> taskManager.removeTask(taskId1)
+        );
+        Assertions.assertEquals("Задачи с таким ID не найдено", ex.getMessage());
     }
 
     @Test
