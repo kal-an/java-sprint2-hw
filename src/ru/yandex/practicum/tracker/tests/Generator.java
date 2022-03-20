@@ -48,14 +48,14 @@ public class Generator {
                 State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
-                LocalDateTime.of(2022, 10, 3, 10, 30)));
+                LocalDateTime.of(2021, 10, 3, 10, 30)));
 
         long subTaskId2 = TaskId.getNewId();
         taskManager.addTask(new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
                 State.NEW,
                 epicId1,
-                Duration.ofMinutes(10),
+                Duration.ofMinutes(5),
                 LocalDateTime.of(2022, 10, 3, 11, 30)));
 
         long subTaskId3 = TaskId.getNewId();

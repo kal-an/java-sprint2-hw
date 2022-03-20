@@ -55,11 +55,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     @Override
-    protected void setSubTasks(SubTask newSubTask) {
-        super.setSubTasks(newSubTask);
-    }
-
-    @Override
     public Task getTask(long taskId) {
         Task task = super.getTask(taskId);
         save();
@@ -165,7 +160,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[7]);
             task = new SubTask(name, description, id, status, epicId, duration, startTime);
-            setSubTasks((SubTask) task);
+            Epic epic = (Epic) tasks.get(epicId);
+            epic.setSubTasks(id); //добавить подзадачу к эпику
         } else if (type == TaskType.EPIC) {
             task = new Epic(name, description, status, id);
         } else {

@@ -63,20 +63,6 @@ public class InMemoryTasksManager implements TaskManager {
         return subTasks;
     }
 
-    //Добавление подзадачи к эпику.
-    protected void setSubTasks(SubTask newSubTask) {
-        long subTaskDuration = newSubTask.getDuration().toMinutes();
-        long epicId = newSubTask.getEpicId(); //найти нужный эпик
-        Epic epic = (Epic) tasks.get(epicId);
-        ArrayList<Long> subTasks = epic.getSubTasks();
-        //если время старта эпика позже чем новая подзадача
-        if (epic.getStartTime().isAfter(newSubTask.getStartTime())) {
-            epic.setStartTime(newSubTask.getStartTime()); //установить время по подзадаче
-        }
-        epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
-        subTasks.add(newSubTask.getTaskId()); //добавить подзадачу к эпику
-    }
-
     //Получение задачи любого типа по идентификатору.
     @Override
     public Task getTask(long taskId) {
@@ -103,7 +89,17 @@ public class InMemoryTasksManager implements TaskManager {
                         sortedTasks.add(newTask); //добавить задачу в сортированное множество
                     }
                     if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
-                        setSubTasks((SubTask) newTask);
+                        long epicId = ((SubTask) newTask).getEpicId(); //найти нужный эпик
+                        Epic epic = (Epic) tasks.get(epicId);
+                        epic.setSubTasks(newTask.getTaskId()); //добавить подзадачу к эпику
+                        long subTaskDuration = newTask.getDuration().toMinutes();
+                        //если время старта эпика позже чем новая подзадача
+                        if (epic.getStartTime().isAfter(newTask.getStartTime())) {
+                            //установить время по подзадаче
+                            epic.setStartTime(newTask.getStartTime());
+                        }
+                        //увеличить продолжительность эпика
+                        epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
                     }
                 }
                 tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
