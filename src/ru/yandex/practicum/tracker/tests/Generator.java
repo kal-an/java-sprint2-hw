@@ -55,8 +55,8 @@ public class Generator {
                 subTaskId2,
                 State.NEW,
                 epicId1,
-                Duration.ofMinutes(5),
-                LocalDateTime.of(2022, 10, 3, 11, 30)));
+                Duration.ofMinutes(60),
+                LocalDateTime.of(2021, 10, 3, 11, 30)));
 
         long subTaskId3 = TaskId.getNewId();
         taskManager.addTask(new SubTask("Подзадача 3", "За продуктами",
@@ -64,7 +64,7 @@ public class Generator {
                 State.NEW,
                 epicId1,
                 Duration.ofMinutes(5),
-                LocalDateTime.of(2022, 10, 3, 12, 37)));
+                LocalDateTime.of(2021, 10, 3, 12, 39)));
 
         long epicId2 = TaskId.getNewId();
         taskManager.addTask(new Epic("Эпик 2", "Убраться в квартире",

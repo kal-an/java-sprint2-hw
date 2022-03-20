@@ -84,23 +84,21 @@ public class InMemoryTasksManager implements TaskManager {
                 if (isAnyTaskIntersections(newTask)) { //если есть пересечения
                     throw new ManagerTaskException("Невозможно запланировать задачу на это время");
                 }
-                else {
-                    if (!(newTask instanceof Epic)) { //не учитываем эпики
-                        sortedTasks.add(newTask); //добавить задачу в сортированное множество
+                if (!(newTask instanceof Epic)) { //не учитываем эпики
+                    sortedTasks.add(newTask); //добавить задачу в сортированное множество
+                }
+                if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
+                    long epicId = ((SubTask) newTask).getEpicId(); //найти нужный эпик
+                    Epic epic = (Epic) tasks.get(epicId);
+                    epic.setSubTasks(newTask.getTaskId()); //добавить подзадачу к эпику
+                    long subTaskDuration = newTask.getDuration().toMinutes();
+                    //если время старта эпика позже чем новая подзадача
+                    if (epic.getStartTime().isAfter(newTask.getStartTime())) {
+                        //установить время по подзадаче
+                        epic.setStartTime(newTask.getStartTime());
                     }
-                    if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
-                        long epicId = ((SubTask) newTask).getEpicId(); //найти нужный эпик
-                        Epic epic = (Epic) tasks.get(epicId);
-                        epic.setSubTasks(newTask.getTaskId()); //добавить подзадачу к эпику
-                        long subTaskDuration = newTask.getDuration().toMinutes();
-                        //если время старта эпика позже чем новая подзадача
-                        if (epic.getStartTime().isAfter(newTask.getStartTime())) {
-                            //установить время по подзадаче
-                            epic.setStartTime(newTask.getStartTime());
-                        }
-                        //увеличить продолжительность эпика
-                        epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
-                    }
+                    //увеличить продолжительность эпика
+                    epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
                 }
                 tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
             }
