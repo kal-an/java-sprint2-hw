@@ -233,6 +233,37 @@ public abstract class TaskManagerTest {
     }
 
     @Test
+    public void shouldCheckEpicDurationWhenRemoveSubTask() {
+        long epicId1 = TaskId.getNewId();
+        Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
+                State.NEW,
+                epicId1);
+        taskManager.addTask(epic);
+
+        long subTaskId1 = TaskId.getNewId();
+        SubTask subTask1 = new SubTask("Подзадача 1", "Купить подарки",
+                subTaskId1,
+                State.NEW,
+                epicId1,
+                Duration.ofMinutes(10),
+                LocalDateTime.of(2022, 3, 15, 13, 30));
+        taskManager.addTask(subTask1);
+
+        long subTaskId2 = TaskId.getNewId();
+        SubTask subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
+                subTaskId2,
+                State.NEW,
+                epicId1,
+                Duration.ofMinutes(30),
+                LocalDateTime.now());
+        taskManager.addTask(subTask2);
+        taskManager.getTask(subTaskId2);
+        taskManager.removeTask(subTaskId2);
+
+        Assertions.assertEquals(10, taskManager.getTask(epicId1).getDuration().toMinutes());
+    }
+
+    @Test
     public void shouldCheckPriorityOfTask() {
         long taskId1 = TaskId.getNewId();
         Task task1 = new Task("Задача 1", "Собрание в 14:00",
