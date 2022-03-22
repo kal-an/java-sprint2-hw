@@ -22,8 +22,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
             .ofPattern("dd.MM.yyyy HH:mm");
 
-    public FileBackedTasksManager(HistoryManager historyManager) {
-        super(historyManager);
+    public FileBackedTasksManager() {
     }
 
     public static void main(String[] args) {
@@ -161,7 +160,10 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             long epicId = Long.parseLong(line[7]);
             task = new SubTask(name, description, id, status, epicId, duration, startTime);
             Epic epic = (Epic) tasks.get(epicId);
+            long subTaskDuration = task.getDuration().toMinutes();
             epic.setSubTasks(id); //добавить подзадачу к эпику
+            //увеличить продолжительность эпика
+            epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
         } else if (type == TaskType.EPIC) {
             task = new Epic(name, description, status, id);
         } else {
@@ -194,8 +196,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     //восстановить данные менеджера из файла
     private static FileBackedTasksManager loadFromFile(File file) {
-        HistoryManager historyManager = new InMemoryHistoryManager();
-        fileBackedTasksManager = new FileBackedTasksManager(historyManager);
+        fileBackedTasksManager = new FileBackedTasksManager();
 
         try (BufferedReader fileReader = new BufferedReader(
                 new FileReader(file, StandardCharsets.UTF_8))) {
