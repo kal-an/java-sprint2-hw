@@ -22,8 +22,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
             .ofPattern("dd.MM.yyyy HH:mm");
 
-    public FileBackedTasksManager(HistoryManager historyManager) {
-        super(historyManager);
+    public FileBackedTasksManager() {
     }
 
     public static void main(String[] args) {
@@ -33,6 +32,8 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
         fileBackedTasksManager = loadFromFile(file);
+        fileBackedTasksManager.getTask(22);
+        fileBackedTasksManager.getTask(21);
         return fileBackedTasksManager;
     }
 
@@ -194,8 +195,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     //восстановить данные менеджера из файла
     private static FileBackedTasksManager loadFromFile(File file) {
-        HistoryManager historyManager = new InMemoryHistoryManager();
-        fileBackedTasksManager = new FileBackedTasksManager(historyManager);
+        fileBackedTasksManager = new FileBackedTasksManager();
 
         try (BufferedReader fileReader = new BufferedReader(
                 new FileReader(file, StandardCharsets.UTF_8))) {

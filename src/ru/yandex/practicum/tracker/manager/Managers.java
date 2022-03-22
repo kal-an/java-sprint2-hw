@@ -6,8 +6,7 @@ import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 public class Managers {
 
     public static InMemoryTasksManager getDefault() {
-        final InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
-        return new InMemoryTasksManager(historyManager);
+        return new InMemoryTasksManager();
     }
 }

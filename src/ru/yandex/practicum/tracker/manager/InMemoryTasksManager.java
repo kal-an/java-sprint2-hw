@@ -2,6 +2,7 @@ package ru.yandex.practicum.tracker.manager;
 
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.history.HistoryManager;
+import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
@@ -13,12 +14,11 @@ import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
     protected static HashMap<Long, Task> tasks = null; //таблица всех задач
-    protected HistoryManager historyManager; //менеджер истории
+    protected HistoryManager historyManager = new InMemoryHistoryManager(); //менеджер истории
     private Set<Task> sortedTasks; //сортированные задачи
 
-    public InMemoryTasksManager(HistoryManager historyManager) {
+    public InMemoryTasksManager() {
         tasks = new HashMap<>();
-        this.historyManager = historyManager;
         Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
         sortedTasks = new TreeSet<>(taskComparator);
     }
