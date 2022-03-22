@@ -32,8 +32,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
         fileBackedTasksManager = loadFromFile(file);
-        fileBackedTasksManager.getTask(22);
-        fileBackedTasksManager.getTask(21);
         return fileBackedTasksManager;
     }
 
