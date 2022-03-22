@@ -15,8 +15,7 @@ import java.util.List;
 
 public abstract class TaskManagerTest {
 
-    HistoryManager historyManager = new InMemoryHistoryManager();
-    TaskManager taskManager = new InMemoryTasksManager(historyManager);
+    TaskManager taskManager = new InMemoryTasksManager();
 
     @Test
     public void shouldReturnTaskList() {
