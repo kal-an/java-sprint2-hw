@@ -175,7 +175,7 @@ public class InMemoryTasksManager implements TaskManager {
     //Удаление задачи по идентификатору.
     @Override
     public void removeTask(long newTaskId) {
-        Task task = tasks.getOrDefault(newTaskId, null);
+        Task task = tasks.get(newTaskId);
         if (task != null) {
             //удаление подзадач если переданный ID является эпиком
             if (tasks.get(newTaskId) instanceof Epic) {
