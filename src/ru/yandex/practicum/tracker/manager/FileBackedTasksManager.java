@@ -25,10 +25,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public FileBackedTasksManager() {
     }
 
-    public static void main(String[] args) {
-        start();
-    }
-
     public static FileBackedTasksManager start() {
         File file = new File(BACKUP_FILE);
         fileBackedTasksManager = loadFromFile(file);
