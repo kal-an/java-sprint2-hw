@@ -102,6 +102,8 @@ public class InMemoryTasksManager implements TaskManager {
                 }
                 tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
             }
+        } else {
+            throw new ManagerTaskException("Ошибка добавления задачи");
         }
     }
 
