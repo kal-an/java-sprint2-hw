@@ -91,7 +91,9 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void remove(Long id) {
         Node<Task> node = historyTaskHashMap.get(id); //получить ноду по id из хеш-таблицы
-        historyTaskList.removeNode(node); //удалить ноду из связного списка
+        if (node != null) {
+            historyTaskList.removeNode(node); //удалить ноду из связного списка
+        }
     }
 
     //Получение списка просмотренных задач
