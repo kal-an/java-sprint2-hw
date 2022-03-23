@@ -1,18 +1,125 @@
 package ru.yandex.practicum.tracker.server;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
+import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
 import ru.yandex.practicum.tracker.manager.Managers;
 import ru.yandex.practicum.tracker.manager.TaskManager;
+import ru.yandex.practicum.tracker.tasks.Task;
 
-import java.net.URI;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.util.Set;
+import com.google.gson.Gson;
 
 public class HttpTaskServer {
 
-    TaskManager taskManager;
+    private static final int PORT = 8080;
+    private static TaskManager taskManager= FileBackedTasksManager.start();
 
-    public HttpTaskServer(URI uri) {
+    public static void main(String[] args) throws IOException {
+        HttpServer server = HttpServer.create();
+        server.bind(new InetSocketAddress(PORT), 0);
+        server.createContext("/tasks", new TasksHandler());
+        server.createContext("/tasks/task", new TaskHandler());
+        server.start();
     }
 
-    public void start() {
-        taskManager = Managers.getDefault();
+    //задачи по приоритету
+    static class TasksHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            String response;
+            String method = httpExchange.getRequestMethod();
+
+            if ("GET".equals(method)) {
+                Gson gson = new Gson();
+                response = gson.toJson(taskManager.getPrioritizedTasks());
+            } else {
+                response = "Некорректный метод";
+            }
+            httpExchange.sendResponseHeaders(200, 0);
+            try (OutputStream os = httpExchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
     }
+
+    //работа с задачей
+    static class TaskHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            String response;
+            String method = httpExchange.getRequestMethod();
+            Gson gson = new Gson();
+            String path = httpExchange.getRequestURI().getPath();
+
+            switch (method) {
+                case "GET":
+                    int indexId = path.indexOf("id=");
+                    if (indexId == -1) { //если параметр не найден
+                        response = gson.toJson(taskManager.getAllTasks()); //все задачи
+                    } else {
+                        try {
+                            long id = Long.parseLong(path.substring(indexId + 3));
+                            Task task = taskManager.getTask(id);
+                            if (task == null) {
+                                response = "Такой задачи не найдено";
+                            } else {
+                                response = gson.toJson(task);
+                            }
+                        } catch (NumberFormatException ex) {
+                            response = "Не верный формат ID";
+                        }
+                    }
+                    break;
+                case "POST":
+                    try (BufferedReader br = new BufferedReader(
+                            new InputStreamReader(httpExchange.getRequestBody()))) {
+                        String body = br.readLine();
+                        Task task = gson.fromJson(body, Task.class);
+                        taskManager.addTask(task);
+                        response = "Создана новая задача";
+                    } catch (ManagerTaskException exception) {
+                        exception.printStackTrace();
+                        response = exception.getMessage();
+                    }
+                    break;
+                case "DELETE":
+                    indexId = path.indexOf("id=");
+                    if (indexId == -1) { //если параметр не найден
+                        taskManager.removeTask(); //удалить все задачи
+                        response = "Удалены все задачи";
+                    } else {
+                        try {
+                            long id = Long.parseLong(path.substring(indexId + 3));
+                            taskManager.removeTask(id); //удалить задачу по ID
+                            response = "Удалена задача";
+                        } catch (ManagerTaskException exception) {
+                            exception.printStackTrace();
+                            response = exception.getMessage();
+                        } catch (NumberFormatException exception) {
+                            exception.printStackTrace();
+                            response = "Не верный формат ID";
+                        }
+                    }
+                    break;
+                default: response = "Некорректный метод";
+            }
+
+            httpExchange.sendResponseHeaders(200, 0);
+            try (OutputStream os = httpExchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+    }
+
 }
