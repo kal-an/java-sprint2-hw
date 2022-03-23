@@ -1,33 +1,31 @@
 package ru.yandex.practicum.tracker.server;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
-import ru.yandex.practicum.tracker.manager.Managers;
 import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Task;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.time.Duration;
-import java.util.Set;
-import com.google.gson.Gson;
 
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    private static TaskManager taskManager= FileBackedTasksManager.start();
+    private static TaskManager taskManager = FileBackedTasksManager.start();
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create();
         server.bind(new InetSocketAddress(PORT), 0);
         server.createContext("/tasks", new TasksHandler());
         server.createContext("/tasks/task", new TaskHandler());
+        server.createContext("/tasks/history", new HistoryHandler());
         server.start();
     }
 
@@ -112,7 +110,8 @@ public class HttpTaskServer {
                         }
                     }
                     break;
-                default: response = "Некорректный метод";
+                default:
+                    response = "Некорректный метод";
             }
 
             httpExchange.sendResponseHeaders(200, 0);
@@ -122,4 +121,24 @@ public class HttpTaskServer {
         }
     }
 
+    //история задач
+    static class HistoryHandler implements HttpHandler {
+
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
+            String response;
+            String method = httpExchange.getRequestMethod();
+
+            if ("GET".equals(method)) {
+                Gson gson = new Gson();
+                response = gson.toJson(taskManager.getHistory());
+            } else {
+                response = "Некорректный метод";
+            }
+            httpExchange.sendResponseHeaders(200, 0);
+            try (OutputStream os = httpExchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        }
+    }
 }
