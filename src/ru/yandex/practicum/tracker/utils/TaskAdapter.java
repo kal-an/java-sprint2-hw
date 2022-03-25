@@ -27,15 +27,20 @@ public class TaskAdapter extends TypeAdapter<Task> {
     @Override
     public Task read(JsonReader jsonReader) throws IOException {
         jsonReader.beginObject();
+        jsonReader.nextName();
         String name = jsonReader.nextString();
+        jsonReader.nextName();
         String description = jsonReader.nextString();
+        jsonReader.nextName();
         long id = jsonReader.nextLong();
+        jsonReader.nextName();
         State status = State.valueOf(jsonReader.nextString());
+        jsonReader.nextName();
         Duration duration = Duration.ofMinutes(jsonReader.nextLong());
+        jsonReader.nextName();
         LocalDateTime startTime = LocalDateTime.parse(jsonReader.nextString(),
                 DateFormat.getDateTimeFormat());
         jsonReader.endObject();
-
         return new Task(name, description, id, status, duration, startTime);
     }
 }
