@@ -3,6 +3,7 @@ package ru.yandex.practicum.tracker.manager;
 import ru.yandex.practicum.tracker.exceptions.ManagerSaveException;
 import ru.yandex.practicum.tracker.manager.history.HistoryManager;
 import ru.yandex.practicum.tracker.tasks.*;
+import ru.yandex.practicum.tracker.utils.DateFormat;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -18,8 +19,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     private final static String BACKUP_FILE = "./src/ru/yandex/practicum/tracker/state.csv";
     private static List<Long> recentlyTasks;
     private static FileBackedTasksManager fileBackedTasksManager;
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
-            .ofPattern("dd.MM.yyyy HH:mm");
 
     public FileBackedTasksManager() {
     }
@@ -130,7 +129,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         sb.append(",").append(task.getTaskStatus());
         sb.append(",").append(task.getTaskDescription());
         sb.append(",").append(task.getDuration().toMinutes());
-        sb.append(",").append(task.getStartTime().format(DATE_TIME_FORMATTER));
+        sb.append(",").append(task.getStartTime().format(DateFormat.getDateTimeFormat()));
 
         if (type.equals(TaskType.SUBTASK)) {
             sb.append(",").append(((SubTask) task).getEpicId());
@@ -148,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         State status = State.valueOf(line[3]);
         String description = line[4];
         Duration duration = Duration.ofMinutes(Long.parseLong(line[5]));
-        LocalDateTime startTime = LocalDateTime.parse(line[6], DATE_TIME_FORMATTER);
+        LocalDateTime startTime = LocalDateTime.parse(line[6], DateFormat.getDateTimeFormat());
         Task task;
 
         if (type == TaskType.SUBTASK) {
