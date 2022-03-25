@@ -100,7 +100,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 new FileWriter(BACKUP_FILE, StandardCharsets.UTF_8))) {
             fileWriter.write(sb.toString());
 
-            for (Task task : tasks.values()) {
+            for (Task task : getAllTasks()) {
                 fileWriter.write(taskToString(task));
                 fileWriter.newLine();
             }
