@@ -204,8 +204,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                     break;
                 } else {
                     Task task = fileBackedTasksManager.getTaskFromString(line);
-                    long id = task.getTaskId();
-                    tasks.put(id, task);
+                    fileBackedTasksManager.addTask(task);
                 }
             }
             String history = fileReader.readLine();
