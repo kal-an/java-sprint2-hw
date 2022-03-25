@@ -10,18 +10,13 @@ import java.time.format.DateTimeFormatter;
 
 public class LocaDateTimeAdapter extends TypeAdapter<LocalDateTime> {
 
-    private static final DateTimeFormatter fWriter = DateTimeFormatter
-            .ofPattern("dd.MM.yyyy HH:mm");
-    private static final DateTimeFormatter fReader = DateTimeFormatter
-            .ofPattern("dd.MM.yyyy HH:mm");
-
     @Override
     public void write(JsonWriter jsonWriter, LocalDateTime localDateTime) throws IOException {
-        jsonWriter.value(localDateTime.format(fWriter));
+        jsonWriter.value(localDateTime.format(DateFormat.getDateTimeFormat()));
     }
 
     @Override
     public LocalDateTime read(JsonReader jsonReader) throws IOException {
-        return LocalDateTime.parse(jsonReader.nextString(), fReader);
+        return LocalDateTime.parse(jsonReader.nextString(), DateFormat.getDateTimeFormat());
     }
 }
