@@ -155,11 +155,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[7]);
             task = new SubTask(name, description, id, status, epicId, duration, startTime);
-            Epic epic = (Epic) tasks.get(epicId);
-            long subTaskDuration = task.getDuration().toMinutes();
-            epic.setSubTasks(id); //добавить подзадачу к эпику
-            //увеличить продолжительность эпика
-            epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
         } else if (type == TaskType.EPIC) {
             task = new Epic(name, description, status, id);
         } else {
