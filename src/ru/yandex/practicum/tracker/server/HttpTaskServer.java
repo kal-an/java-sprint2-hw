@@ -211,8 +211,6 @@ public class HttpTaskServer {
                 case "GET":
                     String path = httpExchange.getRequestURI().getPath();
                     String query = httpExchange.getRequestURI().getQuery();
-                    System.out.println(path);
-                    System.out.println(query);
                     String epic = path.split("/")[3]; //path epic
                     if ("epic".equals(epic)) {
                         try {
