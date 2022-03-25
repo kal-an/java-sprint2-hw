@@ -69,6 +69,8 @@ public class InMemoryTasksManager implements TaskManager {
         Task task = tasks.get(taskId);
         if (task != null) {
             historyManager.add(task);
+        } else {
+            throw new ManagerTaskException("Задачи с таким ID не найдено");
         }
         return task;
     }
