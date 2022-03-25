@@ -1,4 +1,4 @@
-package ru.yandex.practicum.tracker.tasks;
+package ru.yandex.practicum.tracker.utils;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
