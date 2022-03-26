@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
-    protected static HashMap<Long, Task> tasks = null; //таблица всех задач
+    protected static Map<Long, Task> tasks = null; //таблица всех задач
     protected HistoryManager historyManager = new InMemoryHistoryManager(); //менеджер истории
     private Set<Task> sortedTasks; //сортированные задачи
 
     public InMemoryTasksManager() {
-        tasks = new HashMap<>();
+        tasks = new LinkedHashMap<>();
         Comparator<Task> taskComparator = Comparator.comparing(Task::getStartTime);
         sortedTasks = new TreeSet<>(taskComparator);
     }
