@@ -49,6 +49,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     @Override
     public Task getTask(long taskId) {
         Task task = super.getTask(taskId);
+        recentlyTasks.add(taskId);
         save();
         return task;
     }
@@ -101,7 +102,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
                 fileWriter.write(taskToString(task));
                 fileWriter.newLine();
             }
-
             fileWriter.newLine();
             fileWriter.write(toString(historyManager));
 
@@ -164,7 +164,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     //сохранить историю просмотров в строку
     private static String toString(HistoryManager historyManager) {
         StringBuilder sb = new StringBuilder();
-
         for (Task task : historyManager.getHistory()) {
             sb.append(task.getTaskId()).append(",");
         }
