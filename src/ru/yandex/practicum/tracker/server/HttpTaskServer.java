@@ -11,6 +11,7 @@ import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
+import ru.yandex.practicum.tracker.utils.EpicAdapter;
 import ru.yandex.practicum.tracker.utils.SubTaskAdapter;
 import ru.yandex.practicum.tracker.utils.TaskAdapter;
 
@@ -152,7 +153,9 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String response;
             String method = httpExchange.getRequestMethod();
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Epic.class, new EpicAdapter())
+                    .create();
 
             switch (method) {
                 case "GET":
