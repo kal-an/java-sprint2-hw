@@ -16,7 +16,7 @@ import java.util.List;
 //класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
     private final static String BACKUP_FILE = "./src/ru/yandex/practicum/tracker/state.csv";
-    private static List<Long> recentlyTasks;
+    private static List<Long> recentlyTasks = new ArrayList<>();
     private static FileBackedTasksManager fileBackedTasksManager;
 
     public FileBackedTasksManager() {
@@ -49,7 +49,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     @Override
     public Task getTask(long taskId) {
         Task task = super.getTask(taskId);
-        recentlyTasks.add(taskId);
+        if (task != null) {
+            recentlyTasks.add(taskId);
+        }
         save();
         return task;
     }
