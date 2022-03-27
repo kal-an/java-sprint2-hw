@@ -10,13 +10,11 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 //класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
     private final static String BACKUP_FILE = "./src/ru/yandex/practicum/tracker/state.csv";
-//    private static List<Long> recentlyTasks = new ArrayList<>();
     private static FileBackedTasksManager fileBackedTasksManager;
 
     public FileBackedTasksManager() {
