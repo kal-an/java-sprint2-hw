@@ -16,7 +16,7 @@ import java.util.List;
 //класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
     private final static String BACKUP_FILE = "./src/ru/yandex/practicum/tracker/state.csv";
-    private static List<Long> recentlyTasks = new ArrayList<>();
+//    private static List<Long> recentlyTasks = new ArrayList<>();
     private static FileBackedTasksManager fileBackedTasksManager;
 
     public FileBackedTasksManager() {
@@ -49,9 +49,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     @Override
     public Task getTask(long taskId) {
         Task task = super.getTask(taskId);
-        if (task != null) {
-            recentlyTasks.add(taskId);
-        }
         save();
         return task;
     }
@@ -79,16 +76,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         super.removeTask(newTaskId);
         save();
 
-    }
-
-    @Override
-    public List<Task> getHistory() {
-        List<Task> list = new ArrayList<>();
-        for (Long id : recentlyTasks) {
-            Task task = tasks.get(id);
-            if (task != null) list.add(task);
-        }
-        return list;
     }
 
     //сохранить текущее состояние менеджера
@@ -202,9 +189,9 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             }
             String history = fileReader.readLine();
             if (history != null) {
-                recentlyTasks = fromString(history);
-            } else {
-                recentlyTasks = Collections.emptyList();
+                for (Long id : fromString(history)) {
+                    fileBackedTasksManager.getTask(id);
+                }
             }
 
         } catch (IOException e) {
