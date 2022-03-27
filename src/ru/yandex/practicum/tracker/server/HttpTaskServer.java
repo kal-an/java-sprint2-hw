@@ -2,6 +2,7 @@ package ru.yandex.practicum.tracker.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -11,15 +12,15 @@ import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
-import ru.yandex.practicum.tracker.utils.EpicAdapter;
-import ru.yandex.practicum.tracker.utils.SubTaskAdapter;
-import ru.yandex.practicum.tracker.utils.TaskAdapter;
+import ru.yandex.practicum.tracker.utils.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class HttpTaskServer {
@@ -52,7 +53,10 @@ public class HttpTaskServer {
             String method = httpExchange.getRequestMethod();
 
             if ("GET".equals(method)) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                        .registerTypeAdapter(Duration.class, new DurationAdapter())
+                        .create();
                 response = gson.toJson(taskManager.getPrioritizedTasks());
                 httpExchange.sendResponseHeaders(200, 0);
             } else {
@@ -74,7 +78,8 @@ public class HttpTaskServer {
             String response;
             String method = httpExchange.getRequestMethod();
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Task.class, new TaskAdapter())
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                    .registerTypeAdapter(Duration.class, new DurationAdapter())
                     .create();
 
             switch (method) {
@@ -154,7 +159,8 @@ public class HttpTaskServer {
             String response;
             String method = httpExchange.getRequestMethod();
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Epic.class, new EpicAdapter())
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                    .registerTypeAdapter(Duration.class, new DurationAdapter())
                     .create();
 
             switch (method) {
@@ -230,7 +236,8 @@ public class HttpTaskServer {
             String response;
             String method = httpExchange.getRequestMethod();
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(SubTask.class, new SubTaskAdapter())
+                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                    .registerTypeAdapter(Duration.class, new DurationAdapter())
                     .create();
 
             switch (method) {
@@ -321,7 +328,10 @@ public class HttpTaskServer {
             String method = httpExchange.getRequestMethod();
 
             if ("GET".equals(method)) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder()
+                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                        .registerTypeAdapter(Duration.class, new DurationAdapter())
+                        .create();
                 response = gson.toJson(taskManager.getHistory());
                 httpExchange.sendResponseHeaders(200, 0);
             } else {
