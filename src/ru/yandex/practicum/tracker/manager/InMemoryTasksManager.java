@@ -112,18 +112,26 @@ public class InMemoryTasksManager implements TaskManager {
     public void updateTask(Task newTask) {
         if (newTask != null) { //если задача не пустая
             State newStatus = newTask.getTaskStatus();
-            tasks.get(newTask.getTaskId()).setTaskStatus(newStatus); //установить новый статус
-
-            if (newTask instanceof SubTask) { //если это подзадача
-                long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
-                Epic epic = (Epic) tasks.get(epicId);
-                if (isAllSubTaskInEpicDone(epic)) {
-                    //если все подзадачи готовы, то эпик тоже готов
-                    tasks.get(epicId).setTaskStatus(State.DONE);
-                } else { //если есть задачи в процессе выполнения, то эпик на выполнении
-                    tasks.get(epicId).setTaskStatus(State.IN_PROGRESS);
+            Task task = tasks.get(newTask.getTaskId());
+            if (task != null) { //если задача найдена в списке
+                task.setTaskStatus(newStatus); //установить новый статус
+                task.setTaskName(newTask.getTaskName());
+                task.setTaskDescription(newTask.getTaskDescription());
+                if (newTask instanceof SubTask) { //если это подзадача
+                    long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
+                    Epic epic = (Epic) tasks.get(epicId);
+                    if (isAllSubTaskInEpicDone(epic)) {
+                        //если все подзадачи готовы, то эпик тоже готов
+                        tasks.get(epicId).setTaskStatus(State.DONE);
+                    } else { //если есть задачи в процессе выполнения, то эпик на выполнении
+                        tasks.get(epicId).setTaskStatus(State.IN_PROGRESS);
+                    }
                 }
+             } else {
+                throw new ManagerTaskException("Ошибка обновления задачи");
             }
+        } else {
+            throw new ManagerTaskException("Ошибка обновления задачи");
         }
     }
 
@@ -138,13 +146,13 @@ public class InMemoryTasksManager implements TaskManager {
             LocalDateTime taskStartTime = task.getStartTime(); //время старта задачи
             LocalDateTime taskFinishTime = taskStartTime
                     .plusMinutes(taskDuration); //время финиша задачи
-
             //если старт или финиш новой задачи
             // пересекается с текущей задаче по врени старта или ее окончания
             if (newTaskFinishTime.isAfter(taskStartTime)
                     && newTaskStartTime.isBefore(taskStartTime)
                     || newTaskStartTime.isBefore(taskFinishTime)
-                    && newTaskFinishTime.isAfter(taskFinishTime)) {
+                    && newTaskFinishTime.isAfter(taskFinishTime)
+                    || newTaskStartTime.isEqual(taskStartTime)) {
                 return true;
             }
         }
