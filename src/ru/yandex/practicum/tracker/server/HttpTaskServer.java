@@ -217,8 +217,6 @@ public class HttpTaskServer {
                         JsonElement name = jsonObject.get("taskName");
                         JsonElement description = jsonObject.get("taskDescription");
                         JsonElement status = jsonObject.get("taskStatus");
-                        JsonElement duration = jsonObject.get("duration");
-                        JsonElement startTime = jsonObject.get("startTime");
                         if (id == null) { //если ID задачи нет в BODY
                             taskManager.addTask(new Epic(name.getAsString(),
                                     description.getAsString(),
