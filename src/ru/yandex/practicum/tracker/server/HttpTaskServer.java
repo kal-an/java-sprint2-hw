@@ -1,7 +1,6 @@
 package ru.yandex.practicum.tracker.server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -22,12 +21,14 @@ import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
     private static TaskManager taskManager = FileBackedTasksManager.start();
     private static final String INFO_TASK_CREATED = "Создана новая задача";
+    private static final String INFO_TASK_UPDATED = "Обновлена задача";
     private static final String INFO_TASK_DELETED = "Удалена задача";
     private static final String INFO_TASKS_DELETED = "Удалена все задачи";
     private static final String INFO_TASK_NOT_FOUND = "Задача не найдена";
@@ -108,9 +109,19 @@ public class HttpTaskServer {
                     try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
+                        JsonElement jsonElement = JsonParser.parseString(body);
+                        JsonElement jsonTaskId = null;
+                        if (jsonElement.isJsonObject()) { //если это элемент JSON
+                            jsonTaskId = jsonElement.getAsJsonObject().get("taskId");
+                        }
                         Task task = gson.fromJson(body, Task.class);
-                        taskManager.addTask(task);
-                        response = INFO_TASK_CREATED;
+                        if (jsonTaskId == null) { //если ID задачи нет в BODY
+                            taskManager.addTask(task); //добавить задачу
+                            response = INFO_TASK_CREATED;
+                        } else {
+                            taskManager.updateTask(task); //обновить задачу
+                            response = INFO_TASK_UPDATED;
+                        }
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (ManagerTaskException exception) {
                         exception.printStackTrace();
