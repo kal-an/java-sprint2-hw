@@ -9,6 +9,7 @@ import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
 import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
+import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
 import ru.yandex.practicum.tracker.utils.*;
@@ -110,24 +111,33 @@ public class HttpTaskServer {
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
                         JsonElement jsonElement = JsonParser.parseString(body);
-                        JsonElement jsonTaskId = null;
-                        if (jsonElement.isJsonObject()) { //если это элемент JSON
-                            jsonTaskId = jsonElement.getAsJsonObject().get("taskId");
-                        }
-                        Task task = gson.fromJson(body, Task.class);
-                        if (jsonTaskId == null) { //если ID задачи нет в BODY
-                            taskManager.addTask(task); //добавить задачу
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        JsonElement id = jsonObject.get("taskId");
+                        JsonElement name = jsonObject.get("taskName");
+                        JsonElement description = jsonObject.get("taskDescription");
+                        JsonElement status = jsonObject.get("taskStatus");
+                        JsonElement duration = jsonObject.get("duration");
+                        JsonElement startTime = jsonObject.get("startTime");
+                        if (id == null) { //если ID задачи нет в BODY
+                            taskManager.addTask(new Task(name.getAsString(),
+                                    description.getAsString(),
+                                    State.valueOf(status.getAsString()),
+                                    Duration.ofMinutes(duration.getAsLong()),
+                                    LocalDateTime.parse(startTime.getAsString(),
+                                            DateFormat.getDateTimeFormat())));
                             response = INFO_TASK_CREATED;
                         } else {
-                            taskManager.updateTask(task); //обновить задачу
+                            taskManager.updateTask(new Task(name.getAsString(),
+                                    description.getAsString(),
+                                    id.getAsLong(),
+                                    State.valueOf(status.getAsString()),
+                                    Duration.ofMinutes(duration.getAsLong()),
+                                    LocalDateTime.parse(startTime.getAsString(),
+                                            DateFormat.getDateTimeFormat())));
                             response = INFO_TASK_UPDATED;
                         }
                         httpExchange.sendResponseHeaders(200, 0);
-                    } catch (ManagerTaskException exception) {
-                        exception.printStackTrace();
-                        response = exception.getMessage();
-                        httpExchange.sendResponseHeaders(404, 0);
-                    } catch (IOException exception) {
+                    } catch (IOException | NumberFormatException | ManagerTaskException exception) {
                         exception.printStackTrace();
                         response = "";
                         httpExchange.sendResponseHeaders(400, 0);
@@ -201,11 +211,28 @@ public class HttpTaskServer {
                     try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
-                        Epic task = gson.fromJson(body, Epic.class);
-                        taskManager.addTask(task);
-                        response = INFO_TASK_CREATED;
+                        JsonElement jsonElement = JsonParser.parseString(body);
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        JsonElement id = jsonObject.get("taskId");
+                        JsonElement name = jsonObject.get("taskName");
+                        JsonElement description = jsonObject.get("taskDescription");
+                        JsonElement status = jsonObject.get("taskStatus");
+                        JsonElement duration = jsonObject.get("duration");
+                        JsonElement startTime = jsonObject.get("startTime");
+                        if (id == null) { //если ID задачи нет в BODY
+                            taskManager.addTask(new Epic(name.getAsString(),
+                                    description.getAsString(),
+                                    State.valueOf(status.getAsString())));
+                            response = INFO_TASK_CREATED;
+                        } else {
+                            taskManager.updateTask(new Epic(name.getAsString(),
+                                    description.getAsString(),
+                                    State.valueOf(status.getAsString()),
+                                    id.getAsLong()));
+                            response = INFO_TASK_UPDATED;
+                        }
                         httpExchange.sendResponseHeaders(200, 0);
-                    } catch (ManagerTaskException exception) {
+                    } catch (IOException | NumberFormatException | ManagerTaskException exception) {
                         exception.printStackTrace();
                         response = "";
                         httpExchange.sendResponseHeaders(400, 0);
@@ -292,9 +319,35 @@ public class HttpTaskServer {
                     try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
-                        SubTask task = gson.fromJson(body, SubTask.class);
-                        taskManager.addTask(task);
-                        response = INFO_TASK_CREATED;
+                        JsonElement jsonElement = JsonParser.parseString(body);
+                        JsonObject jsonObject = jsonElement.getAsJsonObject();
+                        JsonElement id = jsonObject.get("taskId");
+                        JsonElement name = jsonObject.get("taskName");
+                        JsonElement description = jsonObject.get("taskDescription");
+                        JsonElement status = jsonObject.get("taskStatus");
+                        JsonElement duration = jsonObject.get("duration");
+                        JsonElement startTime = jsonObject.get("startTime");
+                        JsonElement epicId = jsonObject.get("epicId");
+                        if (id == null) { //если ID задачи нет в BODY
+                            taskManager.addTask(new SubTask(name.getAsString(),
+                                    description.getAsString(),
+                                    State.valueOf(status.getAsString()),
+                                    epicId.getAsLong(),
+                                    Duration.ofMinutes(duration.getAsLong()),
+                                    LocalDateTime.parse(startTime.getAsString(),
+                                            DateFormat.getDateTimeFormat())));
+                            response = INFO_TASK_CREATED;
+                        } else {
+                            taskManager.updateTask(new SubTask(name.getAsString(),
+                                    description.getAsString(),
+                                    id.getAsLong(),
+                                    State.valueOf(status.getAsString()),
+                                    epicId.getAsLong(),
+                                    Duration.ofMinutes(duration.getAsLong()),
+                                    LocalDateTime.parse(startTime.getAsString(),
+                                            DateFormat.getDateTimeFormat())));
+                            response = INFO_TASK_UPDATED;
+                        }
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (ManagerTaskException | NumberFormatException | IOException exception) {
                         exception.printStackTrace();
