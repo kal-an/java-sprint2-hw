@@ -27,6 +27,19 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public Task(String taskName,
+                String taskDescription,
+                State taskStatus,
+                Duration duration,
+                LocalDateTime startTime) {
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.taskId = TaskId.getNewId();
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
     //задать имя задачи
     public void setTaskName(String taskName) {
         this.taskName = taskName;
