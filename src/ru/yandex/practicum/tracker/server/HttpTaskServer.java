@@ -1,18 +1,19 @@
 package ru.yandex.practicum.tracker.server;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
-import ru.yandex.practicum.tracker.manager.FileBackedTasksManager;
+import ru.yandex.practicum.tracker.manager.Managers;
 import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
 import ru.yandex.practicum.tracker.tasks.SubTask;
 import ru.yandex.practicum.tracker.tasks.Task;
-import ru.yandex.practicum.tracker.utils.*;
+import ru.yandex.practicum.tracker.utils.DateFormat;
+import ru.yandex.practicum.tracker.utils.DurationAdapter;
+import ru.yandex.practicum.tracker.utils.LocalDateTimeAdapter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,12 +23,11 @@ import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    private static TaskManager taskManager = FileBackedTasksManager.start();
+    private static TaskManager taskManager = Managers.getDefault();
     private static final String INFO_TASK_CREATED = "Создана новая задача";
     private static final String INFO_TASK_UPDATED = "Обновлена задача";
     private static final String INFO_TASK_DELETED = "Удалена задача";
