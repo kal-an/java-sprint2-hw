@@ -67,9 +67,10 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public Task getTask(long taskId) {
         Task task = tasks.get(taskId);
-        if (task != null) {
-            historyManager.add(task);
+        if (task == null) {
+            throw new ManagerTaskException("Задача не найдена");
         }
+        historyManager.add(task);
         return task;
     }
 
