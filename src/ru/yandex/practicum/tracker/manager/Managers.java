@@ -3,8 +3,9 @@ package ru.yandex.practicum.tracker.manager;
 //класс для создания менеджера
 public class Managers {
 
-    public static FileBackedTasksManager getDefault() {
+    public static HTTPTaskManager getDefault() {
 
-        return FileBackedTasksManager.start();
+        final String url = "http://localhost:5078";
+        return new HTTPTaskManager(url);
     }
 }
