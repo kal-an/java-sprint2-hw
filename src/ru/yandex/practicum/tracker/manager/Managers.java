@@ -5,6 +5,6 @@ public class Managers {
 
     public static FileBackedTasksManager getDefault() {
 
-        return new FileBackedTasksManager();
+        return FileBackedTasksManager.start();
     }
 }
