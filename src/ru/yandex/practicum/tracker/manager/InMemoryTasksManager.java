@@ -76,34 +76,33 @@ public class InMemoryTasksManager implements TaskManager {
     //Добавление новой задачи, эпика и подзадачи.
     @Override
     public void addTask(Task newTask) {
-        if (newTask != null) {
-            if (!isAnyTasks()) { //если никаких задач еще нет
-                sortedTasks.add(newTask); //добавить задачу в сортированное множество
-                tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
-            } else {
-                if (isAnyTaskIntersections(newTask)) { //если есть пересечения
-                    throw new ManagerTaskException("Невозможно запланировать задачу на это время");
-                }
-                if (!(newTask instanceof Epic)) { //не учитываем эпики
-                    sortedTasks.add(newTask); //добавить задачу в сортированное множество
-                }
-                if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
-                    long epicId = ((SubTask) newTask).getEpicId(); //найти нужный эпик
-                    Epic epic = (Epic) tasks.get(epicId);
-                    epic.setSubTasks(newTask.getTaskId()); //добавить подзадачу к эпику
-                    long subTaskDuration = newTask.getDuration().toMinutes();
-                    //если время старта эпика позже чем новая подзадача
-                    if (epic.getStartTime().isAfter(newTask.getStartTime())) {
-                        //установить время по подзадаче
-                        epic.setStartTime(newTask.getStartTime());
-                    }
-                    //увеличить продолжительность эпика
-                    epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
-                }
-                tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
-            }
-        } else {
+        if (newTask == null) {
             throw new ManagerTaskException("Ошибка добавления задачи");
+        }
+        if (!isAnyTasks()) { //если никаких задач еще нет
+            sortedTasks.add(newTask); //добавить задачу в сортированное множество
+            tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
+        } else {
+            if (isAnyTaskIntersections(newTask)) { //если есть пересечения
+                throw new ManagerTaskException("Невозможно запланировать задачу на это время");
+            }
+            if (!(newTask instanceof Epic)) { //не учитываем эпики
+                sortedTasks.add(newTask); //добавить задачу в сортированное множество
+            }
+            if (newTask instanceof SubTask) { //если это подзадача, то добавить к эпику
+                long epicId = ((SubTask) newTask).getEpicId(); //найти нужный эпик
+                Epic epic = (Epic) tasks.get(epicId);
+                epic.setSubTasks(newTask.getTaskId()); //добавить подзадачу к эпику
+                long subTaskDuration = newTask.getDuration().toMinutes();
+                //если время старта эпика позже чем новая подзадача
+                if (epic.getStartTime().isAfter(newTask.getStartTime())) {
+                    //установить время по подзадаче
+                    epic.setStartTime(newTask.getStartTime());
+                }
+                //увеличить продолжительность эпика
+                epic.setDuration(epic.getDuration().plusMinutes(subTaskDuration));
+            }
+            tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
         }
     }
 
