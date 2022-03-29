@@ -77,7 +77,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     //сохранить текущее состояние менеджера
-    private void save() throws ManagerSaveException {
+    protected void save() throws ManagerSaveException {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,duration,startTime,epic").append("\n");
 
