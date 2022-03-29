@@ -117,7 +117,10 @@ public abstract class TaskManagerTest {
 
     @Test
     public void shouldReturnNullWhenTaskIdIsNotExist() {
-        Assertions.assertNull(taskManager.getTask(45634));
+        ManagerTaskException ex = Assertions.assertThrows(
+                ManagerTaskException.class,
+                () -> taskManager.getTask(56436));
+        Assertions.assertEquals("Задача не найдена", ex.getMessage());
     }
 
     @Test
