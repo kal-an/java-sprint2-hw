@@ -110,28 +110,26 @@ public class InMemoryTasksManager implements TaskManager {
     //Обновление задачи любого типа по идентификатору.
     @Override
     public void updateTask(Task newTask) {
-        if (newTask != null) { //если задача не пустая
-            State newStatus = newTask.getTaskStatus();
-            Task task = tasks.get(newTask.getTaskId());
-            if (task != null) { //если задача найдена в списке
-                task.setTaskStatus(newStatus); //установить новый статус
-                task.setTaskName(newTask.getTaskName());
-                task.setTaskDescription(newTask.getTaskDescription());
-                if (newTask instanceof SubTask) { //если это подзадача
-                    long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
-                    Epic epic = (Epic) tasks.get(epicId);
-                    if (isAllSubTaskInEpicDone(epic)) {
-                        //если все подзадачи готовы, то эпик тоже готов
-                        tasks.get(epicId).setTaskStatus(State.DONE);
-                    } else { //если есть задачи в процессе выполнения, то эпик на выполнении
-                        tasks.get(epicId).setTaskStatus(State.IN_PROGRESS);
-                    }
-                }
-             } else {
-                throw new ManagerTaskException("Ошибка обновления задачи");
-            }
-        } else {
+        if (newTask == null) { //если задача пустая
             throw new ManagerTaskException("Ошибка обновления задачи");
+        }
+        Task task = tasks.get(newTask.getTaskId());
+        State newStatus = newTask.getTaskStatus();
+        if (task == null) { //если задача не найдена в списке
+            throw new ManagerTaskException("Ошибка обновления задачи");
+        }
+        task.setTaskStatus(newStatus); //установить новый статус
+        task.setTaskName(newTask.getTaskName());
+        task.setTaskDescription(newTask.getTaskDescription());
+        if (newTask instanceof SubTask) { //если это подзадача
+            long epicId = ((SubTask) newTask).getEpicId(); //найти id эпика
+            Epic epic = (Epic) tasks.get(epicId);
+            if (isAllSubTaskInEpicDone(epic)) {
+                //если все подзадачи готовы, то эпик тоже готов
+                tasks.get(epicId).setTaskStatus(State.DONE);
+            } else { //если есть задачи в процессе выполнения, то эпик на выполнении
+                tasks.get(epicId).setTaskStatus(State.IN_PROGRESS);
+            }
         }
     }
 
