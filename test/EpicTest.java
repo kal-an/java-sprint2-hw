@@ -37,22 +37,18 @@ class EpicTest {
                 State.NEW, epicId);
         taskManager.addTask(epic);
 
-        long subTaskId1 = TaskId.getNewId();
         SubTask subTask1 = new SubTask("Подзадача 1", "Купить подарки",
-                subTaskId1,
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(30),
-                LocalDateTime.of(2022, 3, 15, 13, 30));
+                LocalDateTime.of(2021, 3, 19, 13, 30));
         taskManager.addTask(subTask1);
 
-        long subTaskId2 = TaskId.getNewId();
         SubTask subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
-                subTaskId2,
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2022, 3, 15, 15, 30));
+                LocalDateTime.of(2021, 3, 15, 15, 30));
         taskManager.addTask(subTask2);
 
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
@@ -70,15 +66,15 @@ class EpicTest {
                 subTaskId1,
                 State.NEW,
                 epicId,
-                Duration.ofMinutes(30),
-                LocalDateTime.of(2022, 3, 15, 13, 30));
+                Duration.ofMinutes(10),
+                LocalDateTime.of(2022, 7, 15, 13, 30));
         taskManager.addTask(subTask1);
         subTask1 = new SubTask("Подзадача 1", "Купить подарки",
                 subTaskId1,
                 State.DONE,
                 epicId,
-                Duration.ofMinutes(30),
-                LocalDateTime.of(2022, 3, 15, 13, 30));
+                Duration.ofMinutes(20),
+                LocalDateTime.of(2022, 8, 15, 16, 30));
         taskManager.updateTask(subTask1);
 
         long subTaskId2 = TaskId.getNewId();
@@ -87,14 +83,14 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2022, 3, 15, 15, 30));
+                LocalDateTime.of(2022, 9, 15, 15, 30));
         taskManager.addTask(subTask2);
         subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
                 State.DONE,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2022, 3, 15, 15, 30));
+                LocalDateTime.of(2022, 10, 15, 15, 30));
         taskManager.updateTask(subTask2);
 
         Assertions.assertEquals(State.DONE, epic.getTaskStatus());
@@ -113,7 +109,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(30),
-                LocalDateTime.of(2022, 3, 15, 13, 30));
+                LocalDateTime.of(2022, 6, 15, 13, 30));
         taskManager.addTask(subTask1);
 
         long subTaskId2 = TaskId.getNewId();
@@ -122,7 +118,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2022, 3, 15, 15, 30));
+                LocalDateTime.of(2022, 12, 15, 15, 30));
         taskManager.addTask(subTask2);
         subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
@@ -148,7 +144,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(30),
-                LocalDateTime.of(2022, 3, 15, 13, 30));
+                LocalDateTime.of(2022, 4, 15, 13, 30));
         taskManager.addTask(subTask1);
         subTask1 = new SubTask("Подзадача 1", "Купить подарки",
                 subTaskId1,
@@ -164,7 +160,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2022, 3, 15, 15, 30));
+                LocalDateTime.of(2022, 2, 15, 15, 30));
         taskManager.addTask(subTask2);
         subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
