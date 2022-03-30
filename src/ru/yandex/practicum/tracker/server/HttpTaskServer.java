@@ -28,10 +28,8 @@ public class HttpTaskServer {
 
     private static final int PORT = 8080;
     private static TaskManager taskManager;
-    private static final String INFO_TASK_CREATED = "Создана новая задача";
-    private static final String INFO_TASK_UPDATED = "Обновлена задача";
     private static final String INFO_TASK_DELETED = "Удалена задача";
-    private static final String INFO_TASKS_DELETED = "Удалена все задачи";
+    private static final String INFO_TASKS_DELETED = "Удалены все задачи";
     private static final String INFO_TASK_NOT_FOUND = "Задача не найдена";
     private static final String INFO_TASKS_NOT_FOUND = "Задачи не найдены";
 
@@ -58,7 +56,6 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String response;
             String method = httpExchange.getRequestMethod();
-
             if ("GET".equals(method)) {
                 Gson gson = new GsonBuilder()
                         .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
@@ -105,7 +102,6 @@ public class HttpTaskServer {
                             response = "";
                             httpExchange.sendResponseHeaders(400, 0);
                         } catch (ManagerTaskException exception) {
-                            exception.printStackTrace();
                             response = "";
                             httpExchange.sendResponseHeaders(404, 0);
                         }
@@ -168,7 +164,6 @@ public class HttpTaskServer {
                             response = INFO_TASK_DELETED;
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException | NumberFormatException exception) {
-                            exception.printStackTrace();
                             response = "";
                             httpExchange.sendResponseHeaders(400, 0);
                         }
@@ -251,7 +246,6 @@ public class HttpTaskServer {
                         response = gson.toJson(task);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (IOException | NumberFormatException | ManagerTaskException exception) {
-                        exception.printStackTrace();
                         response = "";
                         httpExchange.sendResponseHeaders(400, 0);
                     }
@@ -265,7 +259,6 @@ public class HttpTaskServer {
                             response = INFO_TASK_DELETED;
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException | NumberFormatException exception) {
-                            exception.printStackTrace();
                             response = "";
                             httpExchange.sendResponseHeaders(400, 0);
                         }
@@ -323,11 +316,9 @@ public class HttpTaskServer {
                             response = gson.toJson(taskManager.getTask(id));
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException exception) {
-                            exception.printStackTrace();
                             response = INFO_TASK_NOT_FOUND;
                             httpExchange.sendResponseHeaders(404, 0);
                         } catch (NumberFormatException exception) {
-                            exception.printStackTrace();
                             response = "";
                             httpExchange.sendResponseHeaders(400, 0);
                         }
@@ -376,7 +367,6 @@ public class HttpTaskServer {
                         response = gson.toJson(task);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (ManagerTaskException | NumberFormatException | IOException exception) {
-                        exception.printStackTrace();
                         response = "";
                         httpExchange.sendResponseHeaders(400, 0);
                     }
@@ -390,7 +380,6 @@ public class HttpTaskServer {
                             response = INFO_TASK_DELETED;
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException | NumberFormatException exception) {
-                            exception.printStackTrace();
                             response = "";
                             httpExchange.sendResponseHeaders(400, 0);
                         }
