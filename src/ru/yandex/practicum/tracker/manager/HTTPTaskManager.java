@@ -22,37 +22,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
         load();
     }
 
-    @Override
-    public Task getTask(long taskId) {
-        Task task = super.getTask(taskId);
-        save();
-        return task;
-    }
-
-    @Override
-    public void addTask(Task newTask) {
-        super.addTask(newTask);
-        save();
-    }
-
-    @Override
-    public void updateTask(Task newTask) {
-        super.updateTask(newTask);
-        save();
-    }
-
-    @Override
-    public void removeTask() {
-        super.removeTask();
-        save();
-    }
-
-    @Override
-    public void removeTask(long newTaskId) {
-        super.removeTask(newTaskId);
-        save();
-    }
-
     //сохранить в хранилище
     @Override
     protected void save() {
