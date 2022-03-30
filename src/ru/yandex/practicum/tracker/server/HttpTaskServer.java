@@ -235,18 +235,20 @@ public class HttpTaskServer {
                         JsonElement name = jsonObject.get("taskName");
                         JsonElement description = jsonObject.get("taskDescription");
                         JsonElement status = jsonObject.get("taskStatus");
+                        Epic task;
                         if (id == null) { //если ID задачи нет в BODY
-                            taskManager.addTask(new Epic(name.getAsString(),
+                            task = new Epic(name.getAsString(),
                                     description.getAsString(),
-                                    State.valueOf(status.getAsString())));
-                            response = INFO_TASK_CREATED;
+                                    State.valueOf(status.getAsString()));
+                            taskManager.addTask(task);
                         } else {
-                            taskManager.updateTask(new Epic(name.getAsString(),
+                            task = new Epic(name.getAsString(),
                                     description.getAsString(),
                                     State.valueOf(status.getAsString()),
-                                    id.getAsLong()));
-                            response = INFO_TASK_UPDATED;
+                                    id.getAsLong());
+                            taskManager.updateTask(task);
                         }
+                        response = gson.toJson(task);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (IOException | NumberFormatException | ManagerTaskException exception) {
                         exception.printStackTrace();
@@ -350,26 +352,28 @@ public class HttpTaskServer {
                         JsonElement duration = jsonObject.get("duration");
                         JsonElement startTime = jsonObject.get("startTime");
                         JsonElement epicId = jsonObject.get("epicId");
+                        SubTask task;
                         if (id == null) { //если ID задачи нет в BODY
-                            taskManager.addTask(new SubTask(name.getAsString(),
+                            task = new SubTask(name.getAsString(),
                                     description.getAsString(),
                                     State.valueOf(status.getAsString()),
                                     epicId.getAsLong(),
                                     Duration.ofMinutes(duration.getAsLong()),
                                     LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat())));
-                            response = INFO_TASK_CREATED;
+                                            DateFormat.getDateTimeFormat()));
+                            taskManager.addTask(task);
                         } else {
-                            taskManager.updateTask(new SubTask(name.getAsString(),
+                            task = new SubTask(name.getAsString(),
                                     description.getAsString(),
                                     id.getAsLong(),
                                     State.valueOf(status.getAsString()),
                                     epicId.getAsLong(),
                                     Duration.ofMinutes(duration.getAsLong()),
                                     LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat())));
-                            response = INFO_TASK_UPDATED;
+                                            DateFormat.getDateTimeFormat()));
+                            taskManager.updateTask(task);
                         }
+                        response = gson.toJson(task);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (ManagerTaskException | NumberFormatException | IOException exception) {
                         exception.printStackTrace();
