@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.tracker.manager.InMemoryTasksManager;
 import ru.yandex.practicum.tracker.manager.Managers;
 import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
@@ -18,14 +19,13 @@ class EpicTest {
 
     @BeforeEach
     public void createBeforeEach() {
-        taskManager = Managers.getDefault();
+        taskManager = new InMemoryTasksManager();
     }
 
     @Test
     public void shouldSetStatusNewWhenEpicCreated() {
-        long epicId = TaskId.getNewId();
         Epic epic = new Epic("Эпик 1", "Отпраздновать новый год",
-                State.NEW, epicId);
+                State.NEW);
         taskManager.addTask(epic);
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
     }
@@ -48,7 +48,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2021, 3, 15, 15, 30));
+                LocalDateTime.of(2021, 4, 15, 15, 30));
         taskManager.addTask(subTask2);
 
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
@@ -144,7 +144,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(30),
-                LocalDateTime.of(2022, 4, 15, 13, 30));
+                LocalDateTime.of(2022, 4, 13, 13, 30));
         taskManager.addTask(subTask1);
         subTask1 = new SubTask("Подзадача 1", "Купить подарки",
                 subTaskId1,
@@ -160,7 +160,7 @@ class EpicTest {
                 State.NEW,
                 epicId,
                 Duration.ofMinutes(10),
-                LocalDateTime.of(2022, 2, 15, 15, 30));
+                LocalDateTime.of(2022, 2, 20, 15, 30));
         taskManager.addTask(subTask2);
         subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
                 subTaskId2,
