@@ -1,4 +1,4 @@
-# java-sprint6-hw
+# java-sprint7-hw
 ## TASK TRACKER
 
 1. Получение списка всех задач.
