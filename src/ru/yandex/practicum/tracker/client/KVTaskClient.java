@@ -17,6 +17,7 @@ public class KVTaskClient {
     public KVTaskClient(String url) {
         this.url = url;
         httpClient = HttpClient.newHttpClient();
+        register();
     }
 
     public void register() {
