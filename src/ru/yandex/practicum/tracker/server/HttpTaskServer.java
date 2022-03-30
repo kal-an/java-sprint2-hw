@@ -115,7 +115,13 @@ public class HttpTaskServer {
                     try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
+                        if (body == null) {
+                            throw new IOException();
+                        }
                         JsonElement jsonElement = JsonParser.parseString(body);
+                        if (!jsonElement.isJsonObject()) {
+                            throw new IOException();
+                        }
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         JsonElement id = jsonObject.get("taskId");
                         JsonElement name = jsonObject.get("taskName");
@@ -123,27 +129,28 @@ public class HttpTaskServer {
                         JsonElement status = jsonObject.get("taskStatus");
                         JsonElement duration = jsonObject.get("duration");
                         JsonElement startTime = jsonObject.get("startTime");
+                        Task task;
                         if (id == null) { //если ID задачи нет в BODY
-                            taskManager.addTask(new Task(name.getAsString(),
+                            task = new Task(name.getAsString(),
                                     description.getAsString(),
                                     State.valueOf(status.getAsString()),
                                     Duration.ofMinutes(duration.getAsLong()),
                                     LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat())));
-                            response = INFO_TASK_CREATED;
+                                            DateFormat.getDateTimeFormat()));
+                            taskManager.addTask(task);
                         } else {
-                            taskManager.updateTask(new Task(name.getAsString(),
+                            task = new Task(name.getAsString(),
                                     description.getAsString(),
                                     id.getAsLong(),
                                     State.valueOf(status.getAsString()),
                                     Duration.ofMinutes(duration.getAsLong()),
                                     LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat())));
-                            response = INFO_TASK_UPDATED;
+                                            DateFormat.getDateTimeFormat()));
+                            taskManager.updateTask(task);
                         }
+                        response = gson.toJson(task);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (IOException | NumberFormatException | ManagerTaskException exception) {
-                        exception.printStackTrace();
                         response = "";
                         httpExchange.sendResponseHeaders(400, 0);
                     }
@@ -216,7 +223,13 @@ public class HttpTaskServer {
                     try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
+                        if (body == null) {
+                            throw new IOException();
+                        }
                         JsonElement jsonElement = JsonParser.parseString(body);
+                        if (!jsonElement.isJsonObject()) {
+                            throw new IOException();
+                        }
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         JsonElement id = jsonObject.get("taskId");
                         JsonElement name = jsonObject.get("taskName");
@@ -322,7 +335,13 @@ public class HttpTaskServer {
                     try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(httpExchange.getRequestBody()))) {
                         String body = br.readLine();
+                        if (body == null) {
+                            throw new IOException();
+                        }
                         JsonElement jsonElement = JsonParser.parseString(body);
+                        if (!jsonElement.isJsonObject()) {
+                            throw new IOException();
+                        }
                         JsonObject jsonObject = jsonElement.getAsJsonObject();
                         JsonElement id = jsonObject.get("taskId");
                         JsonElement name = jsonObject.get("taskName");
