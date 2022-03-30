@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.tracker.manager.Managers;
+import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.server.HttpTaskServer;
 import ru.yandex.practicum.tracker.server.KVServer;
 
@@ -20,7 +22,8 @@ class HTTPTaskManagerTest {
     public static void createServer() throws IOException {
         kvServer = new KVServer();
         kvServer.start();
-        HttpTaskServer.start();
+        TaskManager taskManager = Managers.getDefault();
+        HttpTaskServer taskServer = new HttpTaskServer(8080, taskManager);
         client = HttpClient.newHttpClient();
     }
 

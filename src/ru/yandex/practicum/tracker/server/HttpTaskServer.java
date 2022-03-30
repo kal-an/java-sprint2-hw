@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
-import ru.yandex.practicum.tracker.manager.Managers;
 import ru.yandex.practicum.tracker.manager.TaskManager;
 import ru.yandex.practicum.tracker.tasks.Epic;
 import ru.yandex.practicum.tracker.tasks.State;
@@ -26,21 +25,17 @@ import java.util.ArrayList;
 
 public class HttpTaskServer {
 
-    private static final int PORT = 8080;
-    private static TaskManager taskManager;
+    private final TaskManager taskManager;
     private static final String INFO_TASK_DELETED = "Удалена задача";
     private static final String INFO_TASKS_DELETED = "Удалены все задачи";
     private static final String INFO_TASK_NOT_FOUND = "Задача не найдена";
     private static final String INFO_TASKS_NOT_FOUND = "Задачи не найдены";
 
-    public static void main(String[] args) throws IOException {
-        start();
-    }
 
-    public static void start() throws IOException {
-        taskManager = Managers.getDefault();
+    public HttpTaskServer(int port, TaskManager taskManager) throws IOException {
+        this.taskManager = taskManager;
         HttpServer server = HttpServer.create();
-        server.bind(new InetSocketAddress(PORT), 0);
+        server.bind(new InetSocketAddress(port), 0);
         server.createContext("/tasks", new TasksHandler());
         server.createContext("/tasks/task", new TaskHandler());
         server.createContext("/tasks/epic", new EpicHandler());
@@ -50,7 +45,7 @@ public class HttpTaskServer {
     }
 
     //задачи по приоритету
-    static class TasksHandler implements HttpHandler {
+    class TasksHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -75,7 +70,7 @@ public class HttpTaskServer {
     }
 
     //работа с задачей
-    static class TaskHandler implements HttpHandler {
+    class TaskHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -180,7 +175,7 @@ public class HttpTaskServer {
     }
 
     //работа с эпиком
-    static class EpicHandler implements HttpHandler {
+    class EpicHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -278,7 +273,7 @@ public class HttpTaskServer {
     }
 
     //работа с подзадачей
-    static class SubTaskHandler implements HttpHandler {
+    class SubTaskHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
@@ -399,7 +394,7 @@ public class HttpTaskServer {
     }
 
     //история задач
-    static class HistoryHandler implements HttpHandler {
+    class HistoryHandler implements HttpHandler {
 
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
