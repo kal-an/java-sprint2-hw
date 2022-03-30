@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class HttpTaskServer {
 
     private static final int PORT = 8080;
-    private static TaskManager taskManager = Managers.getDefault();
+    private static TaskManager taskManager;
     private static final String INFO_TASK_CREATED = "Создана новая задача";
     private static final String INFO_TASK_UPDATED = "Обновлена задача";
     private static final String INFO_TASK_DELETED = "Удалена задача";
@@ -36,6 +36,11 @@ public class HttpTaskServer {
     private static final String INFO_TASKS_NOT_FOUND = "Задачи не найдены";
 
     public static void main(String[] args) throws IOException {
+        start();
+    }
+
+    public static void start() throws IOException {
+        taskManager = Managers.getDefault();
         HttpServer server = HttpServer.create();
         server.bind(new InetSocketAddress(PORT), 0);
         server.createContext("/tasks", new TasksHandler());
