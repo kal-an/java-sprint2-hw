@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class HttpTaskServer {
 
     private final TaskManager taskManager;
+    private final Gson gson;
     private static final String INFO_TASK_DELETED = "Удалена задача";
     private static final String INFO_TASKS_DELETED = "Удалены все задачи";
     private static final String INFO_TASK_NOT_FOUND = "Задача не найдена";
@@ -36,6 +37,10 @@ public class HttpTaskServer {
         this.taskManager = taskManager;
         HttpServer server = HttpServer.create();
         server.bind(new InetSocketAddress(port), 0);
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         server.createContext("/tasks", new TasksHandler());
         server.createContext("/tasks/task", new TaskHandler());
         server.createContext("/tasks/epic", new EpicHandler());
@@ -52,10 +57,6 @@ public class HttpTaskServer {
             String response;
             String method = httpExchange.getRequestMethod();
             if ("GET".equals(method)) {
-                Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                        .registerTypeAdapter(Duration.class, new DurationAdapter())
-                        .create();
                 response = gson.toJson(taskManager.getPrioritizedTasks());
                 httpExchange.sendResponseHeaders(200, 0);
             } else {
@@ -76,10 +77,6 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String response;
             String method = httpExchange.getRequestMethod();
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                    .registerTypeAdapter(Duration.class, new DurationAdapter())
-                    .create();
 
             switch (method) {
                 case "GET":
@@ -181,10 +178,6 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String response;
             String method = httpExchange.getRequestMethod();
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                    .registerTypeAdapter(Duration.class, new DurationAdapter())
-                    .create();
 
             switch (method) {
                 case "GET":
@@ -279,10 +272,6 @@ public class HttpTaskServer {
         public void handle(HttpExchange httpExchange) throws IOException {
             String response;
             String method = httpExchange.getRequestMethod();
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                    .registerTypeAdapter(Duration.class, new DurationAdapter())
-                    .create();
 
             switch (method) {
                 case "GET":
@@ -402,10 +391,6 @@ public class HttpTaskServer {
             String method = httpExchange.getRequestMethod();
 
             if ("GET".equals(method)) {
-                Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                        .registerTypeAdapter(Duration.class, new DurationAdapter())
-                        .create();
                 response = gson.toJson(taskManager.getHistory());
                 httpExchange.sendResponseHeaders(200, 0);
             } else {

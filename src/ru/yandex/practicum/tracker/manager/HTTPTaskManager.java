@@ -16,19 +16,20 @@ import java.util.List;
 public class HTTPTaskManager extends FileBackedTasksManager {
 
     private final KVTaskClient kvTaskClient;
+    private final Gson gson;
 
     public HTTPTaskManager(String url) {
         kvTaskClient = new KVTaskClient(url);
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         load();
     }
 
     //сохранить в хранилище
     @Override
     protected void save() {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
         String tasks = gson.toJson(getAllTasks());
         String history = gson.toJson(getHistory());
         kvTaskClient.put("tasks", tasks);
@@ -37,10 +38,6 @@ public class HTTPTaskManager extends FileBackedTasksManager {
 
     //загрузить из хранилища
     private void load() {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
         List<Task> tasks = gson.fromJson(kvTaskClient.load("tasks"), //все задачи
                 new TypeToken<ArrayList<Task>>() {
                 }.getType());
