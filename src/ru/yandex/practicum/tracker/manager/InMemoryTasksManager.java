@@ -182,30 +182,28 @@ public class InMemoryTasksManager implements TaskManager {
     @Override
     public void removeTask(long newTaskId) {
         Task task = tasks.get(newTaskId);
-        if (task != null) {
-            //удаление подзадач если переданный ID является эпиком
-            if (tasks.get(newTaskId) instanceof Epic) {
-                ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
-                for (Task subTask : subTasks) {
-                    tasks.remove(subTask.getTaskId()); //удалить задачу
-                    historyManager.remove(subTask.getTaskId()); //удалить задачу из просмотров
-                }
-            }
-            //удаление подзадачи из эпика
-            if (tasks.get(newTaskId) instanceof SubTask) {
-                SubTask newSubTask = (SubTask) tasks.get(newTaskId);
-                long subTaskDuration = newSubTask.getDuration().toMinutes();
-                long epicId = newSubTask.getEpicId();
-                Epic epic = (Epic) tasks.get(epicId);
-                epic.setDuration(epic.getDuration().minusMinutes(subTaskDuration));
-                epic.getSubTasks().remove(newTaskId);
-            }
-            tasks.remove(newTaskId); //удалить задачу
-            historyManager.remove(newTaskId); //удалить задачу из просмотров
-        } else {
+        if (task == null) {
             throw new ManagerTaskException("Задачи с таким ID не найдено");
         }
-
+        //удаление подзадач если переданный ID является эпиком
+        if (tasks.get(newTaskId) instanceof Epic) {
+            ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
+            for (Task subTask : subTasks) {
+                tasks.remove(subTask.getTaskId()); //удалить задачу
+                historyManager.remove(subTask.getTaskId()); //удалить задачу из просмотров
+            }
+        }
+        //удаление подзадачи из эпика
+        if (tasks.get(newTaskId) instanceof SubTask) {
+            SubTask newSubTask = (SubTask) tasks.get(newTaskId);
+            long subTaskDuration = newSubTask.getDuration().toMinutes();
+            long epicId = newSubTask.getEpicId();
+            Epic epic = (Epic) tasks.get(epicId);
+            epic.setDuration(epic.getDuration().minusMinutes(subTaskDuration));
+            epic.getSubTasks().remove(newTaskId);
+        }
+        tasks.remove(newTaskId); //удалить задачу
+        historyManager.remove(newTaskId); //удалить задачу из просмотров
     }
 
     //Получение списка просмотренных задач.
