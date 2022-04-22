@@ -5,16 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-//класс для крупных задач
+// Класс для крупных задач
 public class Epic extends Task{
-    private ArrayList<Long> subTasks= new ArrayList<>(); //список id подзадач эпика
-
-    public Epic(String taskName,
-                String taskDescription,
-                State taskStatus,
-                long taskId) {
-        super(taskName, taskDescription, taskId, taskStatus, Duration.ZERO, LocalDateTime.now());
-    }
+    private ArrayList<Long> subTasks= new ArrayList<>(); // Список id подзадач эпика
 
     public Epic(String taskName,
                 String taskDescription,

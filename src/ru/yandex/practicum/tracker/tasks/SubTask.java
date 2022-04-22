@@ -4,20 +4,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-//класс для подзадач
+// Класс для подзадач
 public class SubTask extends Task{
     private long epicId;
-
-    public SubTask(String taskName,
-                   String taskDescription,
-                   long taskId,
-                   State taskStatus,
-                   long epicId,
-                   Duration duration,
-                   LocalDateTime startTime) {
-        super(taskName, taskDescription, taskId, taskStatus, duration, startTime);
-        this.epicId = epicId;
-    }
 
     public SubTask(String taskName,
                    String taskDescription,

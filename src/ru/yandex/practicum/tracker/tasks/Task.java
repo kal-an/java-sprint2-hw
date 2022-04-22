@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-//класс для задач
+// Класс для задач
 public class Task {
     private String taskName;
     private String taskDescription;
@@ -15,82 +15,72 @@ public class Task {
 
     public Task(String taskName,
                 String taskDescription,
-                long taskId,
                 State taskStatus,
                 Duration duration,
                 LocalDateTime startTime) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
+        this.taskStatus = taskStatus;
+        this.duration = duration;
+        this.startTime = startTime;
+    }
+
+    // Задать ID задачи
+    public void setTaskId(long taskId) {
         this.taskId = taskId;
-        this.taskStatus = taskStatus;
-        this.duration = duration;
-        this.startTime = startTime;
     }
 
-    public Task(String taskName,
-                String taskDescription,
-                State taskStatus,
-                Duration duration,
-                LocalDateTime startTime) {
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
-        this.taskId = TaskId.getNewId();
-        this.taskStatus = taskStatus;
-        this.duration = duration;
-        this.startTime = startTime;
-    }
-
-    //задать имя задачи
+    // Задать имя задачи
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
 
-    //задать описание задачи
+    // Задать описание задачи
     public void setTaskDescription(String taskDescription) {
         this.taskDescription = taskDescription;
     }
 
-    //задать статус задачи
+    // Задать статус задачи
     public void setTaskStatus(State taskStatus) {
         this.taskStatus = taskStatus;
     }
 
-    //получить имя задачи
+    // Получить имя задачи
     public String getTaskName() {
         return taskName;
     }
 
-    //получить описание задачи
+    // Получить описание задачи
     public String getTaskDescription() {
         return taskDescription;
     }
 
-    //получить идентификатор задачи
+    // Получить идентификатор задачи
     public long getTaskId() {
         return taskId;
     }
 
-    //получить статус задачи
+    // Получить статус задачи
     public State getTaskStatus() {
         return taskStatus;
     }
 
-    //получить продолжительность задачи
+    // Получить продолжительность задачи
     public Duration getDuration() {
         return duration;
     }
 
-    //задать продолжительность задачи
+    // Задать продолжительность задачи
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
-    //задать время старта задачи
+    // Хадать время старта задачи
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    //получить дату начала выполнения
+    // получить дату начала выполнения
     public LocalDateTime getStartTime() {
         return startTime;
     }
