@@ -48,7 +48,9 @@ class HTTPTaskManagerTest {
     @Test
     public void checkTaskEndpoint() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/");
-        String json = "{\"taskName\": \"Задача 1\",\"taskDescription\": \"Собрание в 14:00\",\"taskStatus\": \"NEW\",\"duration\": 5,\"startTime\":\"19.03.2022 14:00\"}";
+        String json = "{\"taskName\": \"Задача 1\",\"taskDescription\": " +
+                "\"Собрание в 14:00\",\"taskStatus\": \"NEW\"," +
+                "\"duration\": 5,\"startTime\":\"19.03.2022 14:00\"}";
         //POST
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
@@ -88,7 +90,9 @@ class HTTPTaskManagerTest {
     @Test
     public void checkSubTaskEndpoint() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/");
-        String json = "{\"epicId\": 2,\"taskName\": \"Подзадача 1\",\"taskDescription\": \"За продуктами\",\"taskStatus\": \"NEW\",\"duration\": 5,\"startTime\":\"14.03.2022 18:40\"}";
+        String json = "{\"epicId\": 2,\"taskName\": \"Подзадача 1\",\"taskDescription\": " +
+                "\"За продуктами\",\"taskStatus\": \"NEW\"," +
+                "\"duration\": 5,\"startTime\":\"14.03.2022 18:40\"}";
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -128,7 +132,8 @@ class HTTPTaskManagerTest {
     @Test
     public void checkEpicEndpoint() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/epic/");
-        String json = "{\"taskName\": \"Эпик 1\",\"taskDescription\": \"Отпраздновать новый год\",\"taskStatus\": \"NEW\"}";
+        String json = "{\"taskName\": \"Эпик 1\",\"taskDescription\": " +
+                "\"Отпраздновать новый год\",\"taskStatus\": \"NEW\"}";
         HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
         HttpRequest request = HttpRequest.newBuilder().uri(url).POST(body).build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
