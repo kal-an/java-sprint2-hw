@@ -3,19 +3,15 @@ package ru.yandex.practicum.tracker.manager;
 import ru.yandex.practicum.tracker.exceptions.ManagerTaskException;
 import ru.yandex.practicum.tracker.manager.history.HistoryManager;
 import ru.yandex.practicum.tracker.manager.history.InMemoryHistoryManager;
-import ru.yandex.practicum.tracker.tasks.Epic;
-import ru.yandex.practicum.tracker.tasks.State;
-import ru.yandex.practicum.tracker.tasks.SubTask;
-import ru.yandex.practicum.tracker.tasks.Task;
+import ru.yandex.practicum.tracker.tasks.*;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
-    private static Map<Long, Task> tasks = null; //таблица всех задач
-    protected HistoryManager historyManager = new InMemoryHistoryManager(); //менеджер истории
-    private Set<Task> sortedTasks; //сортированные задачи
+    private static Map<Long, Task> tasks = null; // Таблица всех задач
+    protected HistoryManager historyManager = new InMemoryHistoryManager(); // Менеджер истории
+    private Set<Task> sortedTasks; // Сортированные задачи
 
     public InMemoryTasksManager() {
         tasks = new LinkedHashMap<>();
@@ -23,7 +19,7 @@ public class InMemoryTasksManager implements TaskManager {
         sortedTasks = new TreeSet<>(taskComparator);
     }
 
-    //Получение списка всех задач.
+    // Получение списка всех задач.
     @Override
     public ArrayList<Task> getAllTasks() {
         ArrayList<Task> allTasks = new ArrayList<>();
@@ -35,7 +31,7 @@ public class InMemoryTasksManager implements TaskManager {
         return allTasks;
     }
 
-    //Получение списка всех эпиков.
+    // Получение списка всех эпиков.
     @Override
     public ArrayList<Task> getEpics() {
         ArrayList<Task> epics = new ArrayList<>();
@@ -49,7 +45,7 @@ public class InMemoryTasksManager implements TaskManager {
         return epics;
     }
 
-    //Получение списка всех подзадач определённого эпика.
+    // Получение списка всех подзадач определённого эпика.
     @Override
     public ArrayList<SubTask> getSubTasks(long epicId) {
         ArrayList<SubTask> subTasks = new ArrayList<>();
@@ -63,7 +59,7 @@ public class InMemoryTasksManager implements TaskManager {
         return subTasks;
     }
 
-    //Получение задачи любого типа по идентификатору.
+    // Получение задачи любого типа по идентификатору.
     @Override
     public Task getTask(long taskId) {
         Task task = tasks.get(taskId);
@@ -74,12 +70,13 @@ public class InMemoryTasksManager implements TaskManager {
         return task;
     }
 
-    //Добавление новой задачи, эпика и подзадачи.
+    // Добавление новой задачи, эпика и подзадачи.
     @Override
     public void addTask(Task newTask) {
         if (newTask == null) {
             throw new ManagerTaskException("Ошибка добавления задачи");
         }
+        newTask.setTaskId(TaskId.getNewId()); // Присвоить новый ID
         if (!isAnyTasks()) { //если никаких задач еще нет
             sortedTasks.add(newTask); //добавить задачу в сортированное множество
             tasks.put(newTask.getTaskId(), newTask); //добавить в список задач
@@ -107,7 +104,7 @@ public class InMemoryTasksManager implements TaskManager {
         }
     }
 
-    //Обновление задачи любого типа по идентификатору.
+    // Обновление задачи любого типа по идентификатору.
     @Override
     public void updateTask(Task newTask) {
         if (newTask == null) { //если задача пустая
@@ -133,7 +130,7 @@ public class InMemoryTasksManager implements TaskManager {
         }
     }
 
-    //Проверить есть ли задача на это время
+    // Проверить есть ли задача на это время
     private boolean isAnyTaskIntersections(Task newTask) {
         long newTaskDuration = newTask.getDuration().toMinutes(); //продолжительность новой задачи
         LocalDateTime newTaskStartTime = newTask.getStartTime(); //время старта новой задачи
@@ -157,7 +154,7 @@ public class InMemoryTasksManager implements TaskManager {
         return false;
     }
 
-    //проверить готовность подзадач эпика
+    // Проверить готовность подзадач эпика
     private boolean isAllSubTaskInEpicDone(Epic epicId) {
         ArrayList<SubTask> subTasks = getSubTasks(epicId.getTaskId());
         for (Task subTask : subTasks) {
@@ -169,7 +166,7 @@ public class InMemoryTasksManager implements TaskManager {
         return true;
     }
 
-    //Удаление ранее всех добавленных задач.
+    // Удаление ранее всех добавленных задач.
     @Override
     public void removeTask() {
         if (isAnyTasks()) { //есть ли задачи
@@ -178,14 +175,14 @@ public class InMemoryTasksManager implements TaskManager {
         historyManager.clear();
     }
 
-    //Удаление задачи по идентификатору.
+    // Удаление задачи по идентификатору.
     @Override
     public void removeTask(long newTaskId) {
         Task task = tasks.get(newTaskId);
         if (task == null) {
             throw new ManagerTaskException("Задачи с таким ID не найдено");
         }
-        //удаление подзадач если переданный ID является эпиком
+        // Удаление подзадач если переданный ID является эпиком
         if (tasks.get(newTaskId) instanceof Epic) {
             ArrayList<SubTask> subTasks = getSubTasks(newTaskId); //список подзадач эпика
             for (Task subTask : subTasks) {
@@ -193,7 +190,7 @@ public class InMemoryTasksManager implements TaskManager {
                 historyManager.remove(subTask.getTaskId()); //удалить задачу из просмотров
             }
         }
-        //удаление подзадачи из эпика
+        // Удаление подзадачи из эпика
         if (tasks.get(newTaskId) instanceof SubTask) {
             SubTask newSubTask = (SubTask) tasks.get(newTaskId);
             long subTaskDuration = newSubTask.getDuration().toMinutes();
@@ -206,14 +203,14 @@ public class InMemoryTasksManager implements TaskManager {
         historyManager.remove(newTaskId); //удалить задачу из просмотров
     }
 
-    //Получение списка просмотренных задач.
+    // Получение списка просмотренных задач.
     @Override
     public List<Task> getHistory() {
 
         return historyManager.getHistory();
     }
 
-    //проверить есть ли задачи в таблице
+    // Проверить есть ли задачи в таблице
     private boolean isAnyTasks() {
         return !tasks.isEmpty();
     }
