@@ -49,7 +49,7 @@ public class HttpTaskServer {
         server.start();
     }
 
-    //задачи по приоритету
+    // задачи по приоритету
     class TasksHandler implements HttpHandler {
 
         @Override
@@ -70,7 +70,7 @@ public class HttpTaskServer {
         }
     }
 
-    //работа с задачей
+    // работа с задачей
     class TaskHandler implements HttpHandler {
 
         @Override
@@ -82,7 +82,7 @@ public class HttpTaskServer {
                 case "GET":
                     String query = httpExchange.getRequestURI().getQuery();
                     if (query == null) {
-                        response = gson.toJson(taskManager.getAllTasks()); //все задачи
+                        response = gson.toJson(taskManager.getAllTasks()); // все задачи
                         httpExchange.sendResponseHeaders(200, 0);
                     } else {
                         try {
@@ -110,33 +110,13 @@ public class HttpTaskServer {
                         if (!jsonElement.isJsonObject()) {
                             throw new IOException();
                         }
-                        JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        JsonElement id = jsonObject.get("taskId");
-                        JsonElement name = jsonObject.get("taskName");
-                        JsonElement description = jsonObject.get("taskDescription");
-                        JsonElement status = jsonObject.get("taskStatus");
-                        JsonElement duration = jsonObject.get("duration");
-                        JsonElement startTime = jsonObject.get("startTime");
-                        Task task;
-                        if (id == null) { //если ID задачи нет в BODY
-                            task = new Task(name.getAsString(),
-                                    description.getAsString(),
-                                    State.valueOf(status.getAsString()),
-                                    Duration.ofMinutes(duration.getAsLong()),
-                                    LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat()));
-                            taskManager.addTask(task);
+                        Task newTask = gson.fromJson(body, Task.class);
+                        if (newTask.getTaskId() == 0) { // если ID задачи нет в BODY
+                            taskManager.addTask(newTask);
                         } else {
-                            task = new Task(name.getAsString(),
-                                    description.getAsString(),
-                                    id.getAsLong(),
-                                    State.valueOf(status.getAsString()),
-                                    Duration.ofMinutes(duration.getAsLong()),
-                                    LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat()));
-                            taskManager.updateTask(task);
+                            taskManager.updateTask(newTask);
                         }
-                        response = gson.toJson(task);
+                        response = gson.toJson(newTask);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (IOException | NumberFormatException | ManagerTaskException exception) {
                         response = "";
@@ -145,14 +125,14 @@ public class HttpTaskServer {
                     break;
                 case "DELETE":
                     query = httpExchange.getRequestURI().getQuery();
-                    if (query == null) { //если параметр не найден
-                        taskManager.removeTask(); //удалить все задачи
+                    if (query == null) { // если параметр не найден
+                        taskManager.removeTask(); // удалить все задачи
                         response = INFO_TASKS_DELETED;
                         httpExchange.sendResponseHeaders(200, 0);
                     } else {
                         try {
                             long id = Long.parseLong(query.split("=")[1]);
-                            taskManager.removeTask(id); //удалить задачу по ID
+                            taskManager.removeTask(id); // удалить задачу по ID
                             response = INFO_TASK_DELETED;
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException | NumberFormatException exception) {
@@ -171,7 +151,7 @@ public class HttpTaskServer {
         }
     }
 
-    //работа с эпиком
+    // работа с эпиком
     class EpicHandler implements HttpHandler {
 
         @Override
@@ -182,8 +162,8 @@ public class HttpTaskServer {
             switch (method) {
                 case "GET":
                     String query = httpExchange.getRequestURI().getQuery();
-                    if (query == null) { //если параметр не найден
-                        response = gson.toJson(taskManager.getEpics()); //все задачи
+                    if (query == null) { // если параметр не найден
+                        response = gson.toJson(taskManager.getEpics()); // все задачи
                         httpExchange.sendResponseHeaders(200, 0);
                     } else {
                         try {
@@ -213,25 +193,13 @@ public class HttpTaskServer {
                         if (!jsonElement.isJsonObject()) {
                             throw new IOException();
                         }
-                        JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        JsonElement id = jsonObject.get("taskId");
-                        JsonElement name = jsonObject.get("taskName");
-                        JsonElement description = jsonObject.get("taskDescription");
-                        JsonElement status = jsonObject.get("taskStatus");
-                        Epic task;
-                        if (id == null) { //если ID задачи нет в BODY
-                            task = new Epic(name.getAsString(),
-                                    description.getAsString(),
-                                    State.valueOf(status.getAsString()));
-                            taskManager.addTask(task);
+                        Epic newTask = gson.fromJson(body, Epic.class);;
+                        if (newTask.getTaskId() == 0) { // если ID задачи нет в BODY
+                            taskManager.addTask(newTask);
                         } else {
-                            task = new Epic(name.getAsString(),
-                                    description.getAsString(),
-                                    State.valueOf(status.getAsString()),
-                                    id.getAsLong());
-                            taskManager.updateTask(task);
+                            taskManager.updateTask(newTask);
                         }
-                        response = gson.toJson(task);
+                        response = gson.toJson(newTask);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (IOException | NumberFormatException | ManagerTaskException exception) {
                         response = "";
@@ -240,10 +208,10 @@ public class HttpTaskServer {
                     break;
                 case "DELETE":
                     query = httpExchange.getRequestURI().getQuery();
-                    if (query != null) { //если параметр найден
+                    if (query != null) { // если параметр найден
                         try {
                             long id = Long.parseLong(query.split("=")[1]);
-                            taskManager.removeTask(id); //удалить задачу по ID
+                            taskManager.removeTask(id); // удалить задачу по ID
                             response = INFO_TASK_DELETED;
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException | NumberFormatException exception) {
@@ -265,7 +233,7 @@ public class HttpTaskServer {
         }
     }
 
-    //работа с подзадачей
+    // работа с подзадачей
     class SubTaskHandler implements HttpHandler {
 
         @Override
@@ -280,7 +248,7 @@ public class HttpTaskServer {
                     if (path.contains("epic")) {
                         try {
                             long id = Long.parseLong(query.split("=")[1]);
-                            //информация по списку подзадач эпика
+                            // информация по списку подзадач эпика
                             ArrayList<SubTask> subTaskList = taskManager.getSubTasks(id);
                             if (subTaskList.isEmpty()) {
                                 response = INFO_TASKS_NOT_FOUND;
@@ -296,7 +264,7 @@ public class HttpTaskServer {
                     } else {
                         try {
                             long id = Long.parseLong(query.split("=")[1]);
-                            //информация по подзадаче
+                            // информация по подзадаче
                             response = gson.toJson(taskManager.getTask(id));
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException exception) {
@@ -319,36 +287,13 @@ public class HttpTaskServer {
                         if (!jsonElement.isJsonObject()) {
                             throw new IOException();
                         }
-                        JsonObject jsonObject = jsonElement.getAsJsonObject();
-                        JsonElement id = jsonObject.get("taskId");
-                        JsonElement name = jsonObject.get("taskName");
-                        JsonElement description = jsonObject.get("taskDescription");
-                        JsonElement status = jsonObject.get("taskStatus");
-                        JsonElement duration = jsonObject.get("duration");
-                        JsonElement startTime = jsonObject.get("startTime");
-                        JsonElement epicId = jsonObject.get("epicId");
-                        SubTask task;
-                        if (id == null) { //если ID задачи нет в BODY
-                            task = new SubTask(name.getAsString(),
-                                    description.getAsString(),
-                                    State.valueOf(status.getAsString()),
-                                    epicId.getAsLong(),
-                                    Duration.ofMinutes(duration.getAsLong()),
-                                    LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat()));
-                            taskManager.addTask(task);
+                        SubTask newTask = gson.fromJson(body, SubTask.class);;
+                        if (newTask.getTaskId() == 0) { // если ID задачи нет в BODY
+                            taskManager.addTask(newTask);
                         } else {
-                            task = new SubTask(name.getAsString(),
-                                    description.getAsString(),
-                                    id.getAsLong(),
-                                    State.valueOf(status.getAsString()),
-                                    epicId.getAsLong(),
-                                    Duration.ofMinutes(duration.getAsLong()),
-                                    LocalDateTime.parse(startTime.getAsString(),
-                                            DateFormat.getDateTimeFormat()));
-                            taskManager.updateTask(task);
+                            taskManager.updateTask(newTask);
                         }
-                        response = gson.toJson(task);
+                        response = gson.toJson(newTask);
                         httpExchange.sendResponseHeaders(200, 0);
                     } catch (ManagerTaskException | NumberFormatException | IOException exception) {
                         response = "";
@@ -357,10 +302,10 @@ public class HttpTaskServer {
                     break;
                 case "DELETE":
                     query = httpExchange.getRequestURI().getQuery();
-                    if (query != null) { //если параметр найден
+                    if (query != null) { // если параметр найден
                         try {
                             long id = Long.parseLong(query.split("=")[1]);
-                            taskManager.removeTask(id); //удалить задачу по ID
+                            taskManager.removeTask(id); // удалить задачу по ID
                             response = INFO_TASK_DELETED;
                             httpExchange.sendResponseHeaders(200, 0);
                         } catch (ManagerTaskException | NumberFormatException exception) {
@@ -382,7 +327,7 @@ public class HttpTaskServer {
         }
     }
 
-    //история задач
+    // история задач
     class HistoryHandler implements HttpHandler {
 
         @Override
