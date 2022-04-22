@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//класс менеджера для автосохранения в файл
+// класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
     private final static String BACKUP_FILE = "./src/ru/yandex/practicum/tracker/state.csv";
     private static FileBackedTasksManager fileBackedTasksManager;
@@ -76,7 +76,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
     }
 
-    //сохранить текущее состояние менеджера
+    // сохранить текущее состояние менеджера
     protected void save() throws ManagerSaveException {
         StringBuilder sb = new StringBuilder();
         sb.append("id,type,name,status,description,duration,startTime,epic").append("\n");
@@ -97,7 +97,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         }
     }
 
-    //сохранение задачи в строку
+    // сохранение задачи в строку
     private String taskToString(Task task) {
         StringBuilder sb = new StringBuilder();
         TaskType type;
@@ -124,7 +124,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return sb.toString();
     }
 
-    //создание задачи из строки
+    // создание задачи из строки
     private Task getTaskFromString(String value) {
         String[] line = value.split(",");
         long id = Long.parseLong(line[0]);
@@ -138,17 +138,18 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[7]);
-            task = new SubTask(name, description, id, status, epicId, duration, startTime);
+            task = new SubTask(name, description, status, epicId, duration, startTime);
         } else if (type == TaskType.EPIC) {
-            task = new Epic(name, description, status, id);
+            task = new Epic(name, description, status);
         } else {
-            task = new Task(name, description, id, status, duration, startTime);
+            task = new Task(name, description, status, duration, startTime);
         }
+        task.setTaskId(id);
 
         return task;
     }
 
-    //сохранить историю просмотров в строку
+    // сохранить историю просмотров в строку
     private static String toString(HistoryManager historyManager) {
         StringBuilder sb = new StringBuilder();
         for (Task task : historyManager.getHistory()) {
@@ -157,7 +158,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return sb.toString();
     }
 
-    //создать список id задач из строки
+    // создать список id задач из строки
     private static List<Long> fromString(String value) {
         List<Long> list = new ArrayList<>();
         String[] line = value.split(",");
@@ -168,7 +169,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         return list;
     }
 
-    //восстановить данные менеджера из файла
+    // восстановить данные менеджера из файла
     private static FileBackedTasksManager loadFromFile(File file) {
         fileBackedTasksManager = new FileBackedTasksManager();
 
