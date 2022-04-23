@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Task {
     private String taskName;
     private String taskDescription;
-    private long taskId;
+    private Long taskId;
     private State taskStatus;
     private Duration duration;
     private LocalDateTime startTime;
@@ -25,7 +25,7 @@ public class Task {
     }
 
     // Задать ID задачи
-    public void setTaskId(long taskId) {
+    public void setTaskId(Long taskId) {
         this.taskId = taskId;
     }
 
@@ -55,7 +55,7 @@ public class Task {
     }
 
     // Получить идентификатор задачи
-    public long getTaskId() {
+    public Long getTaskId() {
         return taskId;
     }
 
@@ -101,7 +101,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return taskId == task.taskId &&
+        return Objects.equals(taskId, task.taskId) &&
                 taskName.equals(task.taskName) &&
                 taskDescription.equals(task.taskDescription) &&
                 taskStatus.equals(task.taskStatus) &&

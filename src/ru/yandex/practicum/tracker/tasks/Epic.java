@@ -45,7 +45,7 @@ public class Epic extends Task{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return this.getTaskId() == task.getTaskId() &&
+        return Objects.equals(this.getTaskId(), task.getTaskId()) &&
                 this.getTaskName().equals(task.getTaskName()) &&
                 this.getTaskDescription().equals(task.getTaskDescription()) &&
                 this.getTaskStatus().equals(task.getTaskStatus()) &&

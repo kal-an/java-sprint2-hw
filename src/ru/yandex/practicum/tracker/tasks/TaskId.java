@@ -2,10 +2,10 @@ package ru.yandex.practicum.tracker.tasks;
 
 //класс для создания идентификаторов
 public class TaskId {
-    private static long id;
+    private static Long id;
 
     //получить новый ID
-    public static long getNewId() {
+    public static Long getNewId() {
         return ++id;
     }
 }
