@@ -138,13 +138,14 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
 
         if (type == TaskType.SUBTASK) {
             long epicId = Long.parseLong(line[7]);
-            task = new SubTask(name, description, status, epicId, duration, startTime);
+            task = new SubTask(name, description, epicId, duration, startTime);
         } else if (type == TaskType.EPIC) {
-            task = new Epic(name, description, status);
+            task = new Epic(name, description);
         } else {
-            task = new Task(name, description, status, duration, startTime);
+            task = new Task(name, description, duration, startTime);
         }
         task.setTaskId(id);
+        task.setTaskStatus(status);
 
         return task;
     }
