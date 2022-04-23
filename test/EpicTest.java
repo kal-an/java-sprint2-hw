@@ -25,22 +25,19 @@ class EpicTest {
     @Test
     public void createBeforeEach() {
         taskManager = new InMemoryTasksManager();
-        epic = new Epic("Эпик 1", "Отпраздновать новый год",
-                State.NEW);
+        epic = new Epic("Эпик 1", "Отпраздновать новый год");
         taskManager.addTask(epic);
 
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
         Assertions.assertEquals(0, taskManager.getSubTasks(epic.getTaskId()).size());
 
         subTask1 = new SubTask("Подзадача 1", "Купить подарки",
-                State.NEW,
                 epic.getTaskId(),
                 Duration.ofMinutes(30),
                 LocalDateTime.of(2021, 3, 19, 13, 30));
         taskManager.addTask(subTask1);
 
         subTask2 = new SubTask("Подзадача 2", "Пригласить друзей",
-                State.NEW,
                 epic.getTaskId(),
                 Duration.ofMinutes(10),
                 LocalDateTime.of(2021, 4, 15, 15, 30));
