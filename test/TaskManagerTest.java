@@ -250,4 +250,25 @@ public abstract class TaskManagerTest {
         Assertions.assertIterableEquals(List.of(task3, task1, task2, subTask1, subTask2),
                 taskManager.getPrioritizedTasks());
     }
+
+    @Test
+    @DisplayName("Добавление задач")
+    public void shouldCheckAddTasks() {
+        Task task3 = new Task("Задача 3", "Вынести мусор",
+                Duration.ofMinutes(5),
+                LocalDateTime.of(2020, 3, 10, 14, 29));
+        taskManager.addTask(task3);
+        Assertions.assertEquals(7, taskManager.getAllTasks().size());
+
+        SubTask subTask3 = new SubTask("Подзадача 3", "Придумать меню",
+                epic1.getTaskId(),
+                Duration.ofMinutes(20),
+                LocalDateTime.of(2022, 12, 19, 12, 0));
+        taskManager.addTask(subTask3);
+        Assertions.assertEquals(8, taskManager.getAllTasks().size());
+
+        Epic epic3 = new Epic("Эпик 3", "Написать статью");
+        taskManager.addTask(epic3);
+        Assertions.assertEquals(9, taskManager.getAllTasks().size());
+    }
 }
