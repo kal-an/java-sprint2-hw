@@ -15,12 +15,11 @@ public class Task {
 
     public Task(String taskName,
                 String taskDescription,
-                State taskStatus,
                 Duration duration,
                 LocalDateTime startTime) {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
-        this.taskStatus = taskStatus;
+        this.taskStatus = State.NEW;
         this.duration = duration;
         this.startTime = startTime;
     }

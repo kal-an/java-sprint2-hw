@@ -10,9 +10,8 @@ public class Epic extends Task{
     private ArrayList<Long> subTasks= new ArrayList<>(); // Список id подзадач эпика
 
     public Epic(String taskName,
-                String taskDescription,
-                State taskStatus) {
-        super(taskName, taskDescription, taskStatus, Duration.ZERO, LocalDateTime.now());
+                String taskDescription) {
+        super(taskName, taskDescription, Duration.ZERO, LocalDateTime.now());
     }
 
     public ArrayList<Long> getSubTasks() {
