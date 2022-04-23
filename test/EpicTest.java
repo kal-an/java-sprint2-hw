@@ -10,6 +10,7 @@ import ru.yandex.practicum.tracker.tasks.SubTask;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 // Класс тестирования для эпика
 class EpicTest {
@@ -29,6 +30,7 @@ class EpicTest {
         taskManager.addTask(epic);
 
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
+        Assertions.assertEquals(0, taskManager.getSubTasks(epic.getTaskId()).size());
 
         subTask1 = new SubTask("Подзадача 1", "Купить подарки",
                 State.NEW,
@@ -46,15 +48,16 @@ class EpicTest {
 
         Assertions.assertEquals(State.NEW, epic.getTaskStatus());
         Assertions.assertEquals(3, taskManager.getAllTasks().size());
+        Assertions.assertEquals(2, taskManager.getSubTasks(epic.getTaskId()).size());
+        Assertions.assertEquals(List.of(subTask1, subTask2),
+                taskManager.getSubTasks(epic.getTaskId()));
     }
 
     @Test
     @DisplayName("Статус эпика DONE когда все подзадачи DONE")
     public void shouldSetStatusEpicNewWhenAllSubTaskIsDone() {
-        subTask1.setTaskId(2);
         subTask1.setTaskStatus(State.DONE);
         taskManager.updateTask(subTask1);
-        subTask2.setTaskId(3);
         subTask2.setTaskStatus(State.DONE);
         taskManager.updateTask(subTask2);
 
@@ -64,10 +67,8 @@ class EpicTest {
     @Test
     @DisplayName("Статус эпика IN_PROGRESS когда подзадачи со статусами NEW и DONE")
     public void shouldSetStatusEpicInProgressWhenOneSubTaskIsDone() {
-        subTask1.setTaskId(2);
         subTask1.setTaskStatus(State.IN_PROGRESS);
         taskManager.updateTask(subTask1);
-        subTask2.setTaskId(3);
         subTask2.setTaskStatus(State.DONE);
         taskManager.updateTask(subTask2);
 
@@ -77,11 +78,31 @@ class EpicTest {
     @Test
     @DisplayName("Статус эпика IN_PROGRESS когда подзадачи со статусом IN_PROGRESS")
     public void shouldSetStatusEpicInProgressWhenAllSubTaskIsInProgress() {
-        subTask1.setTaskId(2);
         subTask1.setTaskStatus(State.IN_PROGRESS);
         taskManager.updateTask(subTask1);
-        subTask2.setTaskId(3);
         subTask2.setTaskStatus(State.IN_PROGRESS);
+        taskManager.updateTask(subTask2);
+
+        Assertions.assertEquals(State.IN_PROGRESS, epic.getTaskStatus());
+    }
+
+    @Test
+    @DisplayName("Статус эпика IN_PROGRESS когда подзадачи со статусом IN_PROGRESS и DONE")
+    public void shouldSetStatusEpicInProgressWithInProgressAndDoneSubTasks() {
+        subTask1.setTaskStatus(State.IN_PROGRESS);
+        taskManager.updateTask(subTask1);
+        subTask2.setTaskStatus(State.DONE);
+        taskManager.updateTask(subTask2);
+
+        Assertions.assertEquals(State.IN_PROGRESS, epic.getTaskStatus());
+    }
+
+    @Test
+    @DisplayName("Статус эпика IN_PROGRESS когда подзадачи со статусом NEW и IN_PROGRESS")
+    public void shouldSetStatusEpicInProgressWithNewAndDoneSubTasks() {
+        subTask1.setTaskStatus(State.NEW);
+        taskManager.updateTask(subTask1);
+        subTask2.setTaskStatus(State.DONE);
         taskManager.updateTask(subTask2);
 
         Assertions.assertEquals(State.IN_PROGRESS, epic.getTaskStatus());
