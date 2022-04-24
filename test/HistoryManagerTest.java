@@ -28,6 +28,17 @@ class HistoryManagerTest {
     }
 
     @Test
+    @DisplayName("Проверка добавления в историю")
+    public void shouldAddTask() {
+        Task task1 = new Task("Задача 1", "Собрание в 14:00",
+                Duration.ofMinutes(15),
+                LocalDateTime.of(2022, 3, 15, 10, 30));
+        task1.setTaskId(1L);
+        historyManager.add(task1);
+        Assertions.assertNotNull(historyManager.getHistory());
+    }
+
+    @Test
     @DisplayName("Проверка отсутствия дублей в истории")
     public void shouldReturnUniqueList() {
         Task task1 = new Task("Задача 1", "Собрание в 14:00",
