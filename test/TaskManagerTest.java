@@ -147,6 +147,28 @@ public abstract class TaskManagerTest {
     }
 
     @Test
+    @DisplayName("Обновление статуса задачи")
+    public void shouldUpdateTaskStatus() {
+        Assertions.assertEquals(State.NEW,
+                taskManager.getTask(task2.getTaskId()).getTaskStatus());
+        task2.setTaskStatus(State.IN_PROGRESS);
+        taskManager.updateTask(task2);
+        Assertions.assertEquals(State.IN_PROGRESS,
+                taskManager.getTask(task2.getTaskId()).getTaskStatus());
+    }
+
+    @Test
+    @DisplayName("Обновление статуса подзадачи")
+    public void shouldUpdateSubTaskStatus() {
+        Assertions.assertEquals(State.NEW,
+                taskManager.getTask(subTask2.getTaskId()).getTaskStatus());
+        subTask2.setTaskStatus(State.IN_PROGRESS);
+        taskManager.updateTask(subTask2);
+        Assertions.assertEquals(State.IN_PROGRESS,
+                taskManager.getTask(subTask2.getTaskId()).getTaskStatus());
+    }
+
+    @Test
     @DisplayName("Получение списка эпиков")
     public void shouldReturnEpicList() {
         Assertions.assertIterableEquals(List.of(epic1, epic2), taskManager.getEpics());
