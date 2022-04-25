@@ -9,8 +9,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class InMemoryTasksManager implements TaskManager {
-    private static Map<Long, Task> tasks = null; // Таблица всех задач
-    protected HistoryManager historyManager = new InMemoryHistoryManager(); // Менеджер истории
+    protected static Map<Long, Task> tasks = null; // Таблица всех задач
+    // Менеджер истории
+    protected static HistoryManager historyManager = new InMemoryHistoryManager();
     private Set<Task> sortedTasks; // Сортированные задачи
 
     public InMemoryTasksManager() {
