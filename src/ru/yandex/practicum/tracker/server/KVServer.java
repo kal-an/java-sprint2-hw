@@ -111,6 +111,11 @@ public class KVServer {
         server.start();
     }
 
+    public void stop() {
+        System.out.println("Останавливаем сервер");
+        server.stop(0);
+    }
+
     private String generateApiKey() {
         return "" + System.currentTimeMillis();
     }
