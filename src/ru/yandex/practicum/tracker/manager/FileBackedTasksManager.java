@@ -14,17 +14,7 @@ import java.util.List;
 
 // класс менеджера для автосохранения в файл
 public class FileBackedTasksManager extends InMemoryTasksManager {
-    private final static String BACKUP_FILE = "./src/ru/yandex/practicum/tracker/state.csv";
-    private static FileBackedTasksManager fileBackedTasksManager;
-
-    public FileBackedTasksManager() {
-    }
-
-    public static FileBackedTasksManager start() {
-        File file = new File(BACKUP_FILE);
-        fileBackedTasksManager = loadFromFile(file);
-        return fileBackedTasksManager;
-    }
+    private static File backupFile;
 
     @Override
     public ArrayList<Task> getAllTasks() {
@@ -73,7 +63,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     public void removeTask(long newTaskId) {
         super.removeTask(newTaskId);
         save();
-
     }
 
     // сохранить текущее состояние менеджера
@@ -82,7 +71,7 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
         sb.append("id,type,name,status,description,duration,startTime,epic").append("\n");
 
         try (BufferedWriter fileWriter = new BufferedWriter(
-                new FileWriter(BACKUP_FILE, StandardCharsets.UTF_8))) {
+                new FileWriter(backupFile, StandardCharsets.UTF_8))) {
             fileWriter.write(sb.toString());
 
             for (Task task : getAllTasks()) {
@@ -171,26 +160,25 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
     }
 
     // восстановить данные менеджера из файла
-    private static FileBackedTasksManager loadFromFile(File file) {
-        fileBackedTasksManager = new FileBackedTasksManager();
-
+    public static FileBackedTasksManager loadFromFile(File file) {
+        FileBackedTasksManager taskManager = new FileBackedTasksManager();
+        backupFile = file;
         try (BufferedReader fileReader = new BufferedReader(
                 new FileReader(file, StandardCharsets.UTF_8))) {
             fileReader.readLine();
             while (fileReader.ready()) {
                 String line = fileReader.readLine();
-
-                if (line.isEmpty()) {
-                    break;
+                if (!line.isEmpty()) {
+                    Task task = taskManager.getTaskFromString(line);
+                    tasks.put(task.getTaskId(), task);
                 } else {
-                    Task task = fileBackedTasksManager.getTaskFromString(line);
-                    fileBackedTasksManager.addTask(task);
+                    break;
                 }
             }
             String history = fileReader.readLine();
             if (history != null) {
                 for (Long id : fromString(history)) {
-                    fileBackedTasksManager.getTask(id);
+                    historyManager.add(tasks.get(id));
                 }
             }
 
@@ -198,6 +186,6 @@ public class FileBackedTasksManager extends InMemoryTasksManager {
             System.out.println("Не удалось восстановить данные из файла");
             e.printStackTrace();
         }
-        return fileBackedTasksManager;
+        return taskManager;
     }
 }
