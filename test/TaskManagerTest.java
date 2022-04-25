@@ -17,7 +17,7 @@ import java.util.List;
 
 public abstract class TaskManagerTest {
 
-    private TaskManager taskManager;
+    protected TaskManager taskManager;
     private Task task1;
     private Task task2;
     private Epic epic1;
@@ -63,9 +63,6 @@ public abstract class TaskManagerTest {
     @Test
     @DisplayName("Удаление всех задач")
     public void shouldReturnEmptyTaskList() {
-        taskManager.getTask(task1.getTaskId());
-        taskManager.getTask(task2.getTaskId());
-        Assertions.assertIterableEquals(List.of(task1, task2), taskManager.getHistory());
         taskManager.removeTask();
         Assertions.assertIterableEquals(Collections.emptyList(), taskManager.getHistory());
         Assertions.assertIterableEquals(Collections.emptyList(), taskManager.getAllTasks());
@@ -76,7 +73,6 @@ public abstract class TaskManagerTest {
     public void shouldReturnTaskListWhenRemoveTask() {
         taskManager.getTask(task1.getTaskId());
         taskManager.getTask(task2.getTaskId());
-        Assertions.assertIterableEquals(List.of(task1, task2), taskManager.getHistory());
         taskManager.removeTask(task1.getTaskId());
         Assertions.assertIterableEquals(List.of(task2), taskManager.getHistory());
         Assertions.assertIterableEquals(List.of(task2, epic1, subTask1, subTask2, epic2),
